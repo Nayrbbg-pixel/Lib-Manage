@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lib Management</title>
+</head>
+<body>
+    {% if msg %}
+        {{msg}}
+    {% endif %}
+    <form method="POST" action="/auth/register">
+        <label>Username:</label><br>
+        <input name="username" type="text" required /><br><br>
+        <label>Password:</label><br>
+        <input name="password1" type="password" required /><br><br>
+        <label>Confirm Password:</label><br>
+        <input name="password2" type="password" required /><br><br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
