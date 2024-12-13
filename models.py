@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String,Enum 
+from sqlalchemy import Column, Integer, String,Enum, Boolean, Date
 from enum import Enum as pyEnum
 
 class Role(str,pyEnum):
@@ -14,3 +14,13 @@ class User(Base):
     username = Column(String(50), unique=True,nullable=False)
     password = Column(String,nullable=False)
     role = Column(Enum(Role),nullable=False)
+    
+class Book(Base):
+    __tablename__ = 'book'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    book_name = Column(String,nullable=False)
+    author = Column(String,nullable=False)
+    available = Column(Boolean,nullable=False)
+    return_date = Column(Date,nullable=True)
+    
