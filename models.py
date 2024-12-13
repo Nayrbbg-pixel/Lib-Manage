@@ -25,5 +25,4 @@ class Book(Base):
     author = Column(String,nullable=False)
     available = Column(Boolean,nullable=False)
     return_date = Column(Date,nullable=True)
-    user_id = Column(Integer,ForeignKey('user.id'))
     genre = Column(String)

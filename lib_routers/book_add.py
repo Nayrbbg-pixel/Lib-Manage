@@ -40,7 +40,6 @@ async def add_book_database(request:Request,db:db_conn,
             book_name=book_name,
             author = author,
             available=True,
-            user_id = user['id'],
             genre=genre
         )
         

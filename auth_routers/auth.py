@@ -128,9 +128,7 @@ async def login_for_access_token(request:Request,
     try:
         form = LoginForm(request=request)
         await form.create_oauth_form()
-        response = templates.TemplateResponse('login.html',context={
-        'request':request,"msg":"Successfully logged in!"
-        })
+        response = RedirectResponse(url='/library/dashboard',status_code=302)
         validation_cookie = await store_access_token(response=response,
                                                      form_data=form,db=db)
         if validation_cookie is False:

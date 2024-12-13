@@ -17,13 +17,13 @@ templates = Jinja2Templates(directory='templates')
 @router.get('/dashboard',response_class=HTMLResponse)
 async def dashboard_page(request:Request,db:db_conn,q:Optional[str]=None):
     user = decode_jwt(request)
-    user_lib_books = db.query(Book).filter(Book.user_id==user['id']).all()
+    user_lib_books = db.query(Book).all()
     if user is False:
         return RedirectResponse(url='/auth/login',status_code=302)
     if user['role'] == 'user':
          return RedirectResponse(url='/home',status_code=302)
     if q is not None:
-        books=db.query(Book).filter(Book.user_id==user['id']).all()
+        books=db.query(Book).all()
         results = []
         for book in books:
             if q.lower() in book.book_name.lower() or q.lower() in book.author.lower() or q.lower() in book.genre.lower():
