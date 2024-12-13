@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Dashboard</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        nav {
+            background-color: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        nav a {
+            text-decoration: none;
+            margin-right: 1rem;
+            color: #000000;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav a:hover {
+            color: #444444;
+        }
+
+        nav form {
+            display: flex;
+            align-items: center;
+        }
+
+        nav input {
+            padding: 0.5rem;
+            border: 1px solid #000000;
+            background-color: #ffffff;
+            color: #000000;
+            border-radius: 20px;
+            margin-right: 0.5rem;
+            transition: border-color 0.3s ease, transform 0.3s;
+        }
+
+        nav input:focus {
+            border-color: #000000;
+            outline: none;
+            transform: scale(1.05);
+        }
+
+        nav button {
+            padding: 0.5rem 1rem;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s;
+        }
+
+        nav button:hover {
+            background-color: #444444;
+            transform: scale(1.05);
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            padding: 2rem;
+            text-align: center;
+            background-color: #ffffff;
+            border-bottom: 2px solid #000000;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            color: #000000;
+        }
+
+        .dashboard-header p {
+            font-size: 1.2rem;
+            color: #444444;
+        }
+
+        /* Book List */
+        .book-list {
+            width: 90%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            color: #000000;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-list th, .book-list td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .book-list th {
+            background-color: #000000;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .book-list tr {
+            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .book-list tr:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.02);
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        footer p {
+            color: #000000;
+            font-size: 0.9rem;
+        }
+
+        footer p a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        footer p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div>
+            <a href="/library/dashboard">Dashboard</a>
+            <a href="/library/book_page">Add Books</a>
+            {% if user['role']=='admin' %}<a href="/admin">Admin Panel</a>{% endif %}
+        </div>
+        <form method="GET" action="/library/dashboard">
+            <input type="text" name="q" placeholder="Search books...">
+            <button type="submit">Search</button>
+        </form>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <h1>Your Library Dashboard</h1>
+        <p>Click on a book to edit its details.</p>
+    </header>
+
+    <!-- Book Table -->
+    <table class="book-list">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr onclick="location.href='/library/edit/{{ book.id }}'">
+                <td>{{ book.book_name }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.genre }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Library System. Designed by Aryan. <a href="#">Privacy Policy</a></p>
+    </footer>
+</body>
+</html>

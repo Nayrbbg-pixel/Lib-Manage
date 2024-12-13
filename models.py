@@ -1,5 +1,7 @@
 from database import Base
-from sqlalchemy import Column, Integer, String,Enum, Boolean, Date
+from sqlalchemy import (Column, Integer, String,
+                        Enum, Boolean, Date,
+                        ForeignKey)
 from enum import Enum as pyEnum
 
 class Role(str,pyEnum):
@@ -23,4 +25,5 @@ class Book(Base):
     author = Column(String,nullable=False)
     available = Column(Boolean,nullable=False)
     return_date = Column(Date,nullable=True)
-    
+    user_id = Column(Integer,ForeignKey('user.id'))
+    genre = Column(String)

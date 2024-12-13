@@ -19,6 +19,8 @@ async def add_book_page(request:Request):
     user = decode_jwt(request)
     if user is False:
         return RedirectResponse(url='/auth/login',status_code=302)
+    if user['role'] == 'user':
+         return RedirectResponse(url='/home',status_code=302)
     return templates.TemplateResponse('add_book_page.html',
                                       context={
                                           'request':request
@@ -26,26 +28,30 @@ async def add_book_page(request:Request):
     
 @router.post('/book_page')
 async def add_book_database(request:Request,db:db_conn,
-                            book_name=Form(...),author=Form(...)):
+                            book_name=Form(...),author=Form(...),
+                            genre=Form(...)):
+    user = decode_jwt(request)
+    if user is False:
+        return RedirectResponse(url='/auth/login',status_code=302)
+    if user['role'] == 'user':
+         return RedirectResponse(url='/home',status_code=302)
     try:
         book = Book(
             book_name=book_name,
             author = author,
-            available=True
+            available=True,
+            user_id = user['id'],
+            genre=genre
         )
         
         db.add(book)
         db.commit()
         db.refresh(book)
         
+        return RedirectResponse(url='/library/dashboard',status_code=302)
+    except Exception as e:
         return templates.TemplateResponse('add_book_page.html',
                                         context={
                                             'request':request,
-                                            'msg':'Successfully added the book!'
-                                        })
-    except:
-        return templates.TemplateResponse('add_book_page.html',
-                                        context={
-                                            'request':request,
-                                            'msg':'Failed to add the book!'
+                                            'msg':e
                                         })

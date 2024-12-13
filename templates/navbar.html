@@ -1,0 +1,40 @@
+<style>
+    nav {
+        background-color: #333333;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    nav:hover {
+        background-color: #444444;
+    }
+
+    nav a {
+        text-decoration: none;
+        margin-right: 1rem;
+        color: #ffffff;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+    nav a:hover {
+        color: #ff5722;
+    }
+</style>
+<!-- navbar_other.html -->
+<nav>
+    <div>
+        <a href="/dashboard">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/help">Help</a>
+    </div>
+</nav>
