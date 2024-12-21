@@ -34,4 +34,4 @@ class ProfileImage(Base):
     
     id = Column(Integer,primary_key=True,index=True)
     user_id = Column(Integer,ForeignKey('user.id'))
-    image_data = Column(LargeBinary)
+    image_data = Column(LargeBinary, nullable=True)

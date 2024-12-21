@@ -33,15 +33,16 @@
 <section class="container mx-auto mt-8 px-6">
     <div class="bg-gray-100 p-8 shadow-lg rounded-lg">
         <div class="flex items-center space-x-6">
-            <img class="w-32 h-32 rounded-full transition-transform transform hover:scale-110 duration-300" 
-                 src="{{ user.profile_picture_url if user.profile_picture_url else '/static/images/unknownuser.jpg' }}" 
-                 alt="{{ user.username }}'s Profile Picture">
+            <a href="/users/{{user['id']}}/profile-image"><img class="w-32 h-32 rounded-full transition-transform transform hover:scale-110 duration-300" 
+                 src="/users/{{user['id']}}/profile-image" 
+                 alt="{{ user.username }}'s Profile Picture"></a>
             <div>
                 <h2 class="text-3xl font-bold">{{ user.username }}</h2>
-                <p class="text-gray-600">{{ user.role if user.role == 'user' else 'Student' }}</p>
-                <form method="POST" action="/upload-profile-picture" enctype="multipart/form-data" class="mt-4">
-                    <input type="file" name="profile_picture" class="hidden" id="profile-picture-input">
+                <p class="text-gray-600">{{ user.role.value.capitalize() if user.role != 'user' else 'Student' }}</p>
+                <form method="POST" action="/profile" enctype="multipart/form-data" class="mt-4">
+                    <input type="file" name="image" class="hidden" id="profile-picture-input">
                     <label for="profile-picture-input" class="bg-gray-200 text-black px-4 py-2 rounded-md cursor-pointer transition duration-300 hover:bg-gray-300">Change Profile Picture</label>
+                    <button type="submit" class="bg-gray-200 text-black px-4 py-2 rounded-md cursor-pointer transition duration-300 hover:bg-gray-300">Save</button>
                 </form>
             </div>
         </div>
@@ -69,6 +70,11 @@
         </div>
     </div>
 </section>
+<script>
+    document.getElementById('profile-picture-input').addEventListener('change', function() {
+        document.getElementById('profile-picture-form').submit();
+    });
+</script>
 
 </body>
 </html>
