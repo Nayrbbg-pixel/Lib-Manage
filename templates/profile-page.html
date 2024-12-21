@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}'s Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for transitions and animations */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-white text-black">
+
+<!-- Navigation Bar -->
+<nav class="bg-gray-800 shadow-md p-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-bold text-white">Library System</h1>
+        <ul class="flex space-x-4">
+            <li><a href="/" class="text-gray-300 hover:text-white transition duration-300">Home</a></li>
+            <li><a href="/logout" class="text-gray-300 hover:text-white transition duration-300">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Profile Section -->
+<section class="container mx-auto mt-8 px-6">
+    <div class="bg-gray-100 p-8 shadow-lg rounded-lg">
+        <div class="flex items-center space-x-6">
+            <img class="w-32 h-32 rounded-full transition-transform transform hover:scale-110 duration-300" 
+                 src="{{ user.profile_picture_url if user.profile_picture_url else '/static/images/unknownuser.jpg' }}" 
+                 alt="{{ user.username }}'s Profile Picture">
+            <div>
+                <h2 class="text-3xl font-bold">{{ user.username }}</h2>
+                <p class="text-gray-600">{{ user.role if user.role == 'user' else 'Student' }}</p>
+                <form method="POST" action="/upload-profile-picture" enctype="multipart/form-data" class="mt-4">
+                    <input type="file" name="profile_picture" class="hidden" id="profile-picture-input">
+                    <label for="profile-picture-input" class="bg-gray-200 text-black px-4 py-2 rounded-md cursor-pointer transition duration-300 hover:bg-gray-300">Change Profile Picture</label>
+                </form>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold">Books Borrowed</h3>
+            <ul class="mt-4 space-y-3">
+                {% for book in user.borrowed_books %}
+                    <li class="bg-gray-50 p-4 rounded-md shadow-sm transition duration-300 hover:bg-gray-100">
+                        <p>{{ book.title }} by {{ book.author }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold">Users with Similar Interests</h3>
+            <ul class="mt-4 space-y-3">
+                {% for borrower in user.similar_borrowers %}
+                    <li class="bg-gray-50 p-4 rounded-md shadow-sm transition duration-300 hover:bg-gray-100">
+                        <p>{{ borrower.username }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

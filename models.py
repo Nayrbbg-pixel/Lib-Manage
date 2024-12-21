@@ -1,7 +1,7 @@
 from database import Base
 from sqlalchemy import (Column, Integer, String,
                         Enum, Boolean, Date,
-                        ForeignKey)
+                        ForeignKey, LargeBinary)
 from enum import Enum as pyEnum
 
 class Role(str,pyEnum):
@@ -28,3 +28,10 @@ class Book(Base):
     genre = Column(String)
     description = Column(String)
     language = Column(String)
+    
+class ProfileImage(Base):
+    __tablename__ = 'profile_image'
+    
+    id = Column(Integer,primary_key=True,index=True)
+    user_id = Column(Integer,ForeignKey('user.id'))
+    image_data = Column(LargeBinary)
