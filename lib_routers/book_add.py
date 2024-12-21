@@ -16,11 +16,7 @@ db_conn = Annotated[Session,Depends(get_db)]
 
 @router.get('/book_page',response_class=HTMLResponse)
 async def add_book_page(request:Request):
-    user = decode_jwt(request)
-    if user is False:
-        return RedirectResponse(url='/auth/login',status_code=302)
-    if user['role'] == 'user':
-         return RedirectResponse(url='/home',status_code=302)
+    user = getattr(request.state,'user')
     return templates.TemplateResponse('add_book_page.html',
                                       context={
                                           'request':request
@@ -29,18 +25,16 @@ async def add_book_page(request:Request):
 @router.post('/book_page')
 async def add_book_database(request:Request,db:db_conn,
                             book_name=Form(...),author=Form(...),
-                            genre=Form(...)):
-    user = decode_jwt(request)
-    if user is False:
-        return RedirectResponse(url='/auth/login',status_code=302)
-    if user['role'] == 'user':
-         return RedirectResponse(url='/home',status_code=302)
+                            genre=Form(...),description=Form(...),
+                            language=Form(...)):
     try:
         book = Book(
             book_name=book_name,
             author = author,
             available=True,
-            genre=genre
+            genre=genre,
+            language=language,
+            description=description
         )
         
         db.add(book)

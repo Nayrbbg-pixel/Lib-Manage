@@ -161,19 +161,6 @@ def decode_jwt(request:Request):
     except JWTError:
         return False
 
-@router.get('/test_endpoint')
-async def test_endpoint(request:Request):
-    user = decode_jwt(request)
-    if user is False:
-        response = RedirectResponse(url='/auth/login',status_code=302)
-        response.delete_cookie(key='access_token')
-        return response
-    return templates.TemplateResponse('test.html',
-                                      context={
-                                          'request':request,
-                                          'user':user
-                                      })
-    
 @router.get('/logout')
 async def logout_user(request:Request):
     response = RedirectResponse(url='/auth/login',status_code=302)

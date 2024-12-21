@@ -26,3 +26,5 @@ class Book(Base):
     available = Column(Boolean,nullable=False)
     return_date = Column(Date,nullable=True)
     genre = Column(String)
+    description = Column(String)
+    language = Column(String)

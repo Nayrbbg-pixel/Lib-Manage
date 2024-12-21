@@ -3,20 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lib Manage</title>
+    <title>Library Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
 </head>
-<body>
-    {% if msg %}
-        {{msg}}
-    {% endif %}
-    <form action="/library/book_page" method="POST">
-        <label>Book name:</label><br>
-        <input type="text" name="book_name" required /><br><br>
-        <label>Author name:</label><br>
-        <input type="text" name="author" required /><br><br>
-        <label>Genre:</label><br>
-        <input type="text" name="genre" required /><br><br>
-        <button type="submit">Submit</button>
-    </form>
+<body class="bg-white text-black">
+
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-gray-100 p-8 rounded-lg shadow-lg w-full max-w-md fade-in">
+            <h1 class="text-center text-3xl font-bold mb-6 text-gray-800">Library Management System</h1>
+
+            {% if msg %}
+                <div class="mb-4 text-red-600 text-center">{{ msg }}</div>
+            {% endif %}
+
+            <form action="/library/book_page" method="POST">
+                <label for="book_name" class="block text-gray-700 font-medium mb-2">Book Name:</label>
+                <input type="text" id="book_name" name="book_name" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+                <label for="author" class="block text-gray-700 font-medium mb-2">Author Name:</label>
+                <input type="text" id="author" name="author" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+                <label for="genre" class="block text-gray-700 font-medium mb-2">Genre:</label>
+                <input type="text" id="genre" name="genre" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+                <label for="description" class="block text-gray-700 font-medium mb-2">Description:</label>
+                <textarea id="description" name="description" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+
+                <label for="language" class="block text-gray-700 font-medium mb-2">Language:</label>
+                <input type="text" id="language" name="language" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+                <button type="submit" class="w-full py-3 px-6 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-200">Submit</button>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

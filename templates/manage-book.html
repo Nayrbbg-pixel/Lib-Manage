@@ -3,71 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Book</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Manage/Edit Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
 </head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/library/dashboard">Library</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/library/dashboard">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/library/books">Books</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/logout">Logout</a>
-                    </li>
-                </ul>
+<body class="bg-gray-100 text-black">
+
+    <nav class="bg-black text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/library/dashboard" class="text-white font-bold text-lg">Library</a>
+            <div>
+                <a href="/library/dashboard" class="text-white mx-2 hover:underline">Dashboard</a>
+                <a href="/library/books" class="text-white mx-2 hover:underline">Books</a>
+                <a href="/auth/logout" class="text-white mx-2 hover:underline">Logout</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Manage Book</h1>
-        <form action="/library/manage-book/{{ book.book_name }}/{{ book.id }}" method="POST" class="p-4 border rounded">
-            <div class="mb-3">
-                <label for="book_name" class="form-label">Book Name:</label>
-                <input type="text" class="form-control" id="book_name" name="book_name" required value="{{ book.book_name }}">
-            </div>
-            <div class="mb-3">
-                <label for="author" class="form-label">Author:</label>
-                <input type="text" class="form-control" id="author" name="author" required value="{{ book.author }}">
-            </div>
-            <div class="mb-3">
-                <label for="genre" class="form-label">Genre:</label>
-                <input type="text" class="form-control" id="genre" name="genre" required value="{{ book.genre }}">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Availability:</label><br>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="availability_yes" name="availability" value="Yes" required {% if book.available == True %}checked{% endif %}>
-                    <label class="form-check-label" for="availability_yes">Yes</label>
+    <div class="container mx-auto mt-10 fade-in">
+        <h1 class="text-center text-3xl font-bold mb-6 text-gray-800">Manage/Edit Book</h1>
+
+        {% if msg %}
+        <div class="mb-4 text-red-600 text-center">{{ msg }}</div>
+        {% endif %}
+
+        <div class="bg-white p-6 shadow-md rounded-lg">
+            <form action="/library/manage-book/{{ book.book_name }}/{{ book.id }}" method="POST">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label for="book_name" class="text-gray-700 font-medium">Book Name:</label>
+                        <input type="text" class="w-full p-2 border rounded-lg" id="book_name" name="book_name" required value="{{ book.book_name }}">
+                    </div>
+                    <div>
+                        <label for="author" class="text-gray-700 font-medium">Author:</label>
+                        <input type="text" class="w-full p-2 border rounded-lg" id="author" name="author" required value="{{ book.author }}">
+                    </div>
+                    <div>
+                        <label for="genre" class="text-gray-700 font-medium">Genre:</label>
+                        <input type="text" class="w-full p-2 border rounded-lg" id="genre" name="genre" required value="{{ book.genre }}">
+                    </div>
+                    <div>
+                        <label for="language" class="text-gray-700 font-medium">Language:</label>
+                        <input type="text" class="w-full p-2 border rounded-lg" id="language" name="language" required value="{{ book.language }}">
+                    </div>
+                    <div>
+                        <label for="description" class="text-gray-700 font-medium">Description:</label>
+                        <textarea class="w-full p-2 border rounded-lg" id="description" name="description" required>{{ book.description }}</textarea>
+                    </div>
+                    <div>
+                        <label class="text-gray-700 font-medium">Availability:</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="availability_yes" name="availability" value="Yes" required {% if book.available == True %}checked{% endif %}>
+                            <label class="form-check-label" for="availability_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="availability_no" name="availability" value="No" required {% if book.available == False %}checked{% endif %}>
+                            <label class="form-check-label" for="availability_no">No</label>
+                        </div>
+                    </div>
+                    <div id="return-date-container" {% if book.available == False %} style="display:block;" {% else %} style="display:none;" {% endif %}>
+                        <label for="return_date" class="text-gray-700 font-medium">Return Date:</label>
+                        <input type="date" class="w-full p-2 border rounded-lg" id="return_date" name="return_date" value="{{ book.return_date }}">
+                    </div>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="availability_no" name="availability" value="No" required {% if book.available == False %}checked{% endif %}>
-                    <label class="form-check-label" for="availability_no">No</label>
+
+                <div class="mt-6 flex justify-between">
+                    <a href="/library/delete/{{ book.id }}" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Delete</a>
+                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600">Save</button>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label for="return_date" class="form-label">Return Date:</label>
-                <input type="date" class="form-control" id="return_date" name="return_date" {% if book.available == True %} value="{{ book.return_date }}"{% endif %}>
-            </div>
-            <div class="d-flex justify-content-between">
-                <a href="/library/delete/{{ book.id }}" class="btn btn-danger">Delete</a>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('availability_yes').addEventListener('change', function() {
+            document.getElementById('return-date-container').style.display = 'none';
+        });
+
+        document.getElementById('availability_no').addEventListener('change', function() {
+            document.getElementById('return-date-container').style.display = 'block';
+        });
+    </script>
+
 </body>
 </html>
