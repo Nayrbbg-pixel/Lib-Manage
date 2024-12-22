@@ -1,21 +1,15 @@
+from fastapi import APIRouter, Request, Depends
+from user_routers.utils import templates, get_db
 from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, Request, Form
-from auth_routers.auth import decode_jwt
-from fastapi.templating import Jinja2Templates
-from models import Book
 from sqlalchemy.orm import Session
-from lib_routers.utils import get_db
-from fastapi.responses import HTMLResponse, RedirectResponse
+from models import ProfileImage, Book
 
-db_conn = Annotated[Session,Depends(get_db)]
-router = APIRouter(
-    prefix='/library'
-)
+db_conn = Annotated[Session, Depends(get_db)]
 
-templates = Jinja2Templates(directory='templates')
+router = APIRouter()
 
-@router.get('/dashboard',response_class=HTMLResponse)
-async def dashboard_page(request:Request,db:db_conn,q:Optional[str]=None):
+@router.get('/home')
+async def home_page(request:Request, db:db_conn, q:Optional[str]=None):
     user = getattr(request.state,'user')
     user_lib_books = db.query(Book).all()
     
@@ -38,11 +32,11 @@ async def dashboard_page(request:Request,db:db_conn,q:Optional[str]=None):
             else:
                 continue
         user_lib_books = results
-        return templates.TemplateResponse('dashboard.html',context=
+        return templates.TemplateResponse('home-page.html',context=
                                         {'request':request,
                                          'books':user_lib_books,
                                          'user':user})
-    return templates.TemplateResponse('dashboard.html',context=
-                                        {'request':request,
-                                         'books':user_lib_books,
-                                         'user':user})
+    
+    return templates.TemplateResponse('home-page.html',context={
+        'request':request,'user':user,'books':user_lib_books
+    })

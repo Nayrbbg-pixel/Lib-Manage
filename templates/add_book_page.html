@@ -3,53 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-    </style>
+    <title>Add Book</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-white text-black">
+<body class="min-h-screen bg-white text-black">
+    <!-- Header -->
+    <header class="flex items-center justify-between p-5 border-b border-gray-300">
+        <div class="flex items-center space-x-4">
 
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-gray-100 p-8 rounded-lg shadow-lg w-full max-w-md fade-in">
-            <h1 class="text-center text-3xl font-bold mb-6 text-gray-800">Library Management System</h1>
-
-            {% if msg %}
-                <div class="mb-4 text-red-600 text-center">{{ msg }}</div>
-            {% endif %}
-
-            <form action="/library/book_page" method="POST">
-                <label for="book_name" class="block text-gray-700 font-medium mb-2">Book Name:</label>
-                <input type="text" id="book_name" name="book_name" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-
-                <label for="author" class="block text-gray-700 font-medium mb-2">Author Name:</label>
-                <input type="text" id="author" name="author" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-
-                <label for="genre" class="block text-gray-700 font-medium mb-2">Genre:</label>
-                <input type="text" id="genre" name="genre" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-
-                <label for="description" class="block text-gray-700 font-medium mb-2">Description:</label>
-                <textarea id="description" name="description" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-
-                <label for="language" class="block text-gray-700 font-medium mb-2">Language:</label>
-                <input type="text" id="language" name="language" required class="bg-white text-gray-800 border border-gray-300 rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-
-                <button type="submit" class="w-full py-3 px-6 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-200">Submit</button>
-            </form>
+            {% if user['role'] != 'user' %}<a href="/library/dashboard" class="text-lg font-medium hover:underline">Dashboard</a>{% endif %}
+            {% if user['role'] == 'admin' %}<a href="/admin/admin-panel" class="text-lg font-medium hover:underline">Admin Panel</a>{% endif %}
+            <a href="/auth/logout">Logout</a>
         </div>
-    </div>
+        <a href="/profile" class="flex items-center space-x-2 group">
+            <img src="/users/{{ user['id'] }}/profile-image" 
+                    alt="User Profile" 
+                    class="w-10 h-10 rounded-full border border-gray-300 group-hover:ring-2 group-hover:ring-gray-500 transition">
+            <span class="text-lg font-medium group-hover:underline">{{ user.username }}</span>
+        </a>
+    </header>
 
+    <!-- Main Content -->
+    <main class="p-6">
+        <h2 class="text-xl font-semibold mb-6">Add a New Book</h2>
+        <form action="/library/book_page" method="POST" class="space-y-6">
+            <!-- Book Name -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Book Name</label>
+                <input type="text" id="name" name="book_name" 
+                       class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-500 focus:outline-none" 
+                       required>
+            </div>
+
+            <!-- Author -->
+            <div>
+                <label for="author" class="block text-sm font-medium text-gray-700">Author</label>
+                <input type="text" id="author" name="author" 
+                       class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-500 focus:outline-none" 
+                       required>
+                <p class="text-xs text-gray-500">Separate multiple authors with commas</p>
+            </div>
+
+            <!-- Genre -->
+            <div>
+                <label for="genre" class="block text-sm font-medium text-gray-700">Genre</label>
+                <input type="text" id="genre" name="genre" 
+                       class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-500 focus:outline-none" 
+                       required>
+                <p class="text-xs text-gray-500">Separate multiple genres with commas</p>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="description" name="description" rows="4" 
+                          class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-500 focus:outline-none"></textarea>
+            </div>
+
+            <!-- Publisher -->
+            <div>
+                <label for="publisher" class="block text-sm font-medium text-gray-700">Publisher</label>
+                <input type="text" id="publisher" name="publisher" 
+                       class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-500 focus:outline-none">
+            </div>
+
+            <!-- Publishing Year -->
+            <div>
+                <label for="publishing_year" class="block text-sm font-medium text-gray-700">Publishing Year</label>
+                <input type="number" id="publishing_year" name="publishing_year" 
+                       class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-500 focus:outline-none">
+            </div>
+
+            <!-- Language -->
+            <div>
+                <label for="language" class="block text-sm font-medium text-gray-700">Language</label>
+                <input type="text" id="language" name="language" 
+                       class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-500 focus:outline-none" required>
+                <p class="text-xs text-gray-500">Language in which the book is written</p>
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" 
+                        class="w-full py-2 px-4 bg-black text-white rounded-md shadow-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:outline-none transition">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 border-t border-gray-300">
+        <p class="text-sm text-gray-600">&copy; 2024 Library System. All rights reserved.</p>
+    </footer>
 </body>
 </html>

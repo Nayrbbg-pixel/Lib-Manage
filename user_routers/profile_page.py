@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Request, Depends, File, Response, UploadFile
+from fastapi import APIRouter, Request, Depends, File, Response, UploadFile
 from fastapi.responses import RedirectResponse, FileResponse
 from user_routers.utils import get_db, templates
 from typing import Annotated

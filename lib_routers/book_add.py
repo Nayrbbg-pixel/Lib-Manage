@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Request, Form
 from auth_routers.auth import decode_jwt
 from fastapi.templating import Jinja2Templates
@@ -19,14 +19,16 @@ async def add_book_page(request:Request):
     user = getattr(request.state,'user')
     return templates.TemplateResponse('add_book_page.html',
                                       context={
-                                          'request':request
+                                          'request':request,'user':user
                                       })
     
 @router.post('/book_page')
 async def add_book_database(request:Request,db:db_conn,
                             book_name=Form(...),author=Form(...),
                             genre=Form(...),description=Form(...),
-                            language=Form(...)):
+                            language=Form(...),publisher:Optional[str]=Form(None),
+                            publishing_year:Optional[int]=Form(None)):
+    user = getattr(request.state,'user')
     try:
         book = Book(
             book_name=book_name,
@@ -34,7 +36,9 @@ async def add_book_database(request:Request,db:db_conn,
             available=True,
             genre=genre,
             language=language,
-            description=description
+            description=description,
+            publisher=publisher,
+            publishing_year=publishing_year,
         )
         
         db.add(book)
@@ -43,8 +47,10 @@ async def add_book_database(request:Request,db:db_conn,
         
         return RedirectResponse(url='/library/dashboard',status_code=302)
     except Exception as e:
+        print(e)
         return templates.TemplateResponse('add_book_page.html',
                                         context={
                                             'request':request,
-                                            'msg':e
+                                            'msg':e,
+                                            'user':user
                                         })

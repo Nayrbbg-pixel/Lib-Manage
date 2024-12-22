@@ -155,12 +155,28 @@
         footer p a:hover {
             text-decoration: underline;
         }
+
+        #no_reply{
+            text-align: center;
+            font-size: 1.5rem;
+            color: #000000;
+            margin-top: 2rem;
+        }
     </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <!-- Navbar -->
     <nav>
+        <a href="/profile" class="flex items-center space-x-2 group">
+            <img src="/users/{{ user['id'] }}/profile-image" 
+                    alt="User Profile" 
+                    class="w-10 h-10 rounded-full border border-gray-300 group-hover:ring-2 group-hover:ring-gray-500 transition">
+            <span class="text-lg font-medium group-hover:underline">{{ user.username }}</span>
+        </a>
         <div>
+            
+            <a href="/home">Home</a>
             <a href="/library/dashboard">Dashboard</a>
             <a href="/library/book_page">Add Books</a>
             <a href="/auth/logout">Logout</a>
@@ -171,13 +187,13 @@
             <button type="submit">Search</button>
         </form>
     </nav>
-
     <!-- Dashboard Header -->
     <header class="dashboard-header">
         <h1>Your Library Dashboard</h1>
         <p>Click on a book to edit its details.</p>
     </header>
-
+    
+    {% if books[0] %}
     <!-- Book Table -->
     <table class="book-list">
         <thead>
@@ -197,7 +213,9 @@
             {% endfor %}
         </tbody>
     </table>
-
+    {% else %}
+    <h1 id='no_reply'>No books found.</h1>
+    {% endif %}
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 Library System. Designed by Aryan. <a href="#">Privacy Policy</a></p>

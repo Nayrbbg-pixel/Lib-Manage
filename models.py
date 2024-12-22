@@ -28,6 +28,8 @@ class Book(Base):
     genre = Column(String)
     description = Column(String)
     language = Column(String)
+    publisher = Column(String,nullable=True)
+    publishing_year = Column(Integer,nullable=True)
     
 class ProfileImage(Base):
     __tablename__ = 'profile_image'

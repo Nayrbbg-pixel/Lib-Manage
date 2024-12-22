@@ -1,38 +1,66 @@
+
 <style>
-    nav {
-        background-color: #333333;
-        padding: 1rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        border-radius: 0 0 15px 15px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
+/* Navbar */
+nav {
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
 
-    nav:hover {
-        background-color: #444444;
-    }
+nav a {
+    text-decoration: none;
+    margin-right: 1rem;
+    color: #000000;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
 
-    nav a {
-        text-decoration: none;
-        margin-right: 1rem;
-        color: #ffffff;
-        font-weight: bold;
-        transition: color 0.3s;
-    }
+nav a:hover {
+    color: #444444;
+}
 
-    nav a:hover {
-        color: #ff5722;
-    }
+nav button {
+    padding: 0.5rem 1rem;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s;
+}
+
+nav button:hover {
+    background-color: #444444;
+    transform: scale(1.05);
+}
 </style>
-<!-- navbar_other.html -->
+</head>
+<body class="bg-white text-black">
+
+<!-- Navigation Bar -->
 <nav>
-    <div>
-        <a href="/library/dashboard">Home</a>
-        <a href="/auth/logout">Logout</a>
-    </div>
+<a href="/profile" class="flex items-center space-x-2 group">
+<img src="/users/{{ user['id'] }}/profile-image" 
+        alt="User Profile" 
+        class="w-10 h-10 rounded-full border border-gray-300 group-hover:ring-2 group-hover:ring-gray-500 transition">
+<span class="text-lg font-medium group-hover:underline">{{ user.username }}</span>
+</a>
+<div>
+
+<a href="/home">Home</a>
+{% if user['role']!='user' %}
+<a href="/library/dashboard">Dashboard</a>
+<a href="/library/book_page">Add Books</a>
+{% endif %}
+<a href="/auth/logout">Logout</a>
+{% if user['role']=='admin' %}<a href="/admin">Admin Panel</a>{% endif %}
+</div>
 </nav>

@@ -24,14 +24,15 @@ async def manage_book_page(title:str,book_id:int,
         return RedirectResponse(url='/library/dashboard',status_code=302)
     
     return templates.TemplateResponse('manage-book.html',context={
-        'request':request,'book':book
+        'request':request,'book':book,'user': getattr(request.state,'user')
     })
     
 @router.post('/manage-book/{title}/{book_id}')
 async def manage_book_post_api(request:Request,db:db_conn,title:str,book_id:int,
                                book_name:str=Form(...),author:str=Form(...),genre:str=Form(...),
                                availability:str=Form(...),return_date:Optional[str]=Form(None),
-                               language:str=Form(...),description:str=Form(...)):
+                               language:str=Form(...),description:str=Form(...),publisher:Optional[str]=Form(None),
+                               publishing_year:Optional[int]=Form(None)):
         
     book=db.query(Book).filter(Book.id==book_id).first()
 
@@ -54,12 +55,18 @@ async def manage_book_post_api(request:Request,db:db_conn,title:str,book_id:int,
         if parsed_date is None:
             return templates.TemplateResponse('manage-book.html',context={
         'request':request,'book':book,'msg':'Return date is not given.'})
+            
+    if publishing_year is not None and publishing_year <= 0:
+        return templates.TemplateResponse('manage-book.html',context={
+        'request':request,'book':book,'msg':'Invalid publishing year.'})
         
     book.available = availability
     book.return_date = parsed_date
     book.genre = genre
     book.description = description
     book.language = language
+    book.publisher = publisher
+    book.publishing_year = publishing_year
     
     db.commit()
     db.refresh(book)

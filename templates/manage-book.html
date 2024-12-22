@@ -22,16 +22,7 @@
 </head>
 <body class="bg-gray-100 text-black">
 
-    <nav class="bg-black text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="/library/dashboard" class="text-white font-bold text-lg">Library</a>
-            <div>
-                <a href="/library/dashboard" class="text-white mx-2 hover:underline">Dashboard</a>
-                <a href="/library/books" class="text-white mx-2 hover:underline">Books</a>
-                <a href="/auth/logout" class="text-white mx-2 hover:underline">Logout</a>
-            </div>
-        </div>
-    </nav>
+    {% include 'navbar.html' %}
 
     <div class="container mx-auto mt-10 fade-in">
         <h1 class="text-center text-3xl font-bold mb-6 text-gray-800">Manage/Edit Book</h1>
@@ -58,6 +49,14 @@
                     <div>
                         <label for="language" class="text-gray-700 font-medium">Language:</label>
                         <input type="text" class="w-full p-2 border rounded-lg" id="language" name="language" required value="{{ book.language }}">
+                    </div>
+                    <div>
+                        <label for="publisher" class="text-gray-700 font-medium">Publisher:</label>
+                        <input type="text" class="w-full p-2 border rounded-lg" id="publisher" name="publisher" value="{% if book.publisher %}{{ book.publisher }}{% endif %}">
+                    </div>
+                    <div>
+                        <label for="publishing_year" class="text-gray-700 font-medium">Publishing Year:</label>
+                        <input type="number" class="w-full p-2 border rounded-lg" id="publishing_year" name="publishing_year" value="{{ book.publishing_year }}">
                     </div>
                     <div>
                         <label for="description" class="text-gray-700 font-medium">Description:</label>
