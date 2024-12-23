@@ -17,7 +17,7 @@ class jwtTokenExtractor(BaseHTTPMiddleware):
             return RedirectResponse(url='/auth/login',status_code=302)
         
         request.state.user = jwt_token
+
         if request.url.path.startswith('/library') and jwt_token['role'] =='user' :
             return RedirectResponse(url='/home',status_code=302)
         return await call_next(request)
-        

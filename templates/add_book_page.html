@@ -26,7 +26,7 @@
     <!-- Main Content -->
     <main class="p-6">
         <h2 class="text-xl font-semibold mb-6">Add a New Book</h2>
-        <form action="/library/book_page" method="POST" class="space-y-6">
+        <form action="/library/book_page" method="POST" class="space-y-6" enctype="multipart/form-data">
             <!-- Book Name -->
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Book Name</label>
@@ -81,6 +81,26 @@
                        class="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-500 focus:outline-none" required>
                 <p class="text-xs text-gray-500">Language in which the book is written</p>
             </div>
+            <!-- Cover Image -->
+            <div>
+                <label for="cover_image" class="block text-sm font-medium text-gray-700">Cover Image</label>
+                <input type="file" id="cover_image" name="cover_image" class="hidden" accept="image/*">
+                <div class="flex items-center space-x-4 mt-1">
+                    <button type="button" 
+                            class="py-2 px-4 bg-gray-200 text-gray-700 rounded-md shadow-sm hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:outline-none transition"
+                            onclick="document.getElementById('cover_image').click();">
+                        Upload Cover Image
+                    </button>
+                    <span id="file_name" class="text-sm text-gray-500">No file chosen</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Upload an image file for the book cover</p>
+            </div>
+            <script>
+                document.getElementById('cover_image').addEventListener('change', function() {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+                    document.getElementById('file_name').textContent = fileName;
+                });
+            </script>
 
             <!-- Submit Button -->
             <div>

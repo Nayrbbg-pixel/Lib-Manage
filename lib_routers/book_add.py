@@ -6,6 +6,7 @@ from models import Book
 from sqlalchemy.orm import Session
 from lib_routers.utils import get_db
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import UploadFile, File
 
 templates = Jinja2Templates(directory='templates')
 
@@ -25,11 +26,17 @@ async def add_book_page(request:Request):
 @router.post('/book_page')
 async def add_book_database(request:Request,db:db_conn,
                             book_name=Form(...),author=Form(...),
-                            genre=Form(...),description=Form(...),
+                            genre=Form(...),description:Optional[str]=Form(None),
                             language=Form(...),publisher:Optional[str]=Form(None),
-                            publishing_year:Optional[int]=Form(None)):
+                            publishing_year:Optional[int]=Form(None),
+                            cover_image: UploadFile = File(None)):
     user = getattr(request.state,'user')
     try:
+        if cover_image is not None:
+            cover_image = cover_image.file.read()
+        else:
+            cover_image = None
+        
         book = Book(
             book_name=book_name,
             author = author,
@@ -39,6 +46,7 @@ async def add_book_database(request:Request,db:db_conn,
             description=description,
             publisher=publisher,
             publishing_year=publishing_year,
+            cover_image=cover_image
         )
         
         db.add(book)

@@ -1,12 +1,13 @@
 from datetime import datetime
 from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, Request, Form
+from fastapi import APIRouter, Depends, Request, Form, Response
 from auth_routers.auth import decode_jwt
 from fastapi.templating import Jinja2Templates
 from models import Book
 from sqlalchemy.orm import Session
 from lib_routers.utils import get_db
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi import UploadFile, File
 
 router = APIRouter(prefix='/library')
 
@@ -32,7 +33,7 @@ async def manage_book_post_api(request:Request,db:db_conn,title:str,book_id:int,
                                book_name:str=Form(...),author:str=Form(...),genre:str=Form(...),
                                availability:str=Form(...),return_date:Optional[str]=Form(None),
                                language:str=Form(...),description:str=Form(...),publisher:Optional[str]=Form(None),
-                               publishing_year:Optional[int]=Form(None)):
+                               publishing_year:Optional[int]=Form(None),cover_image:UploadFile=File(None)):
         
     book=db.query(Book).filter(Book.id==book_id).first()
 
@@ -51,6 +52,9 @@ async def manage_book_post_api(request:Request,db:db_conn,title:str,book_id:int,
     else:
         availability = False
         
+    if availability is True:
+        parsed_date = None
+        
     if not availability:
         if parsed_date is None:
             return templates.TemplateResponse('manage-book.html',context={
@@ -59,7 +63,16 @@ async def manage_book_post_api(request:Request,db:db_conn,title:str,book_id:int,
     if publishing_year is not None and publishing_year <= 0:
         return templates.TemplateResponse('manage-book.html',context={
         'request':request,'book':book,'msg':'Invalid publishing year.'})
-        
+     
+
+    try:
+        print(cover_image.file.read()[0])
+        book.cover_image = cover_image.file.read()
+    except:
+        book.cover_image = book.cover_image
+                
+    # print(image_data[0])
+                
     book.available = availability
     book.return_date = parsed_date
     book.genre = genre

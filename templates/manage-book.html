@@ -32,7 +32,7 @@
         {% endif %}
 
         <div class="bg-white p-6 shadow-md rounded-lg">
-            <form action="/library/manage-book/{{ book.book_name }}/{{ book.id }}" method="POST">
+            <form action="/library/manage-book/{{ book.book_name }}/{{ book.id }}" method="POST" enctype="multipart/form-data">
                 <div class="grid grid-cols-2 gap-6">
                     <div>
                         <label for="book_name" class="text-gray-700 font-medium">Book Name:</label>
@@ -77,6 +77,19 @@
                         <label for="return_date" class="text-gray-700 font-medium">Return Date:</label>
                         <input type="date" class="w-full p-2 border rounded-lg" id="return_date" name="return_date" value="{{ book.return_date }}">
                     </div>
+                    <div>
+                        <label for="cover_image" class="font-medium text-gray-700">Cover Image</label>
+                        <input type="file" id="cover_image" name="cover_image" class="hidden" accept="image/*">
+                        <div class="flex items-center space-x-4 mt-1">
+                            <button type="button" 
+                                    class="py-2 px-4 bg-gray-200 text-gray-700 rounded-md shadow-sm hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:outline-none transition"
+                                    onclick="document.getElementById('cover_image').click();">
+                                Upload Cover Image
+                            </button>
+                            <span id="file_name" class="text-sm text-gray-500">No file chosen</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Upload an image file for the book cover</p>
+                    </div>
                 </div>
 
                 <div class="mt-6 flex justify-between">
@@ -85,7 +98,6 @@
                 </div>
             </form>
         </div>
-    </div>
 
     <script>
         document.getElementById('availability_yes').addEventListener('change', function() {
@@ -94,6 +106,11 @@
 
         document.getElementById('availability_no').addEventListener('change', function() {
             document.getElementById('return-date-container').style.display = 'block';
+        });
+
+        document.getElementById('cover_image').addEventListener('change', function() {
+            const fileName = this.files[0]?.name || "No file chosen";
+            document.getElementById('file_name').textContent = fileName;
         });
     </script>
 

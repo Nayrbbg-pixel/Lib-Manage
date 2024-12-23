@@ -8,6 +8,7 @@ from lib_routers.dashboard import router as dashboard_router
 from lib_routers.book_manage import router as manage_router
 from user_routers.profile_page import router as profile_router
 from user_routers.user_home_page import router as home_router
+from user_routers.book_details import router as book_details_router
 from fastapi.middleware.cors import CORSMiddleware
 from middlewares_fastapi.TokenBucketMiddleware import TokenBucketRateLimiter
 from middlewares_fastapi.JWTtokenExtraction import jwtTokenExtractor
@@ -34,6 +35,7 @@ app.include_router(dashboard_router)
 app.include_router(manage_router)
 app.include_router(profile_router)
 app.include_router(home_router)
+app.include_router(book_details_router)
 
 app.add_middleware(TokenBucketRateLimiter)
 app.add_middleware(jwtTokenExtractor)

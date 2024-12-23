@@ -1,3 +1,4 @@
+from datetime import datetime
 from database import Base
 from sqlalchemy import (Column, Integer, String,
                         Enum, Boolean, Date,
@@ -30,6 +31,7 @@ class Book(Base):
     language = Column(String)
     publisher = Column(String,nullable=True)
     publishing_year = Column(Integer,nullable=True)
+    cover_image = Column(LargeBinary,nullable=True)
     
 class ProfileImage(Base):
     __tablename__ = 'profile_image'
@@ -37,3 +39,13 @@ class ProfileImage(Base):
     id = Column(Integer,primary_key=True,index=True)
     user_id = Column(Integer,ForeignKey('user.id'))
     image_data = Column(LargeBinary, nullable=True)
+    
+class BookComment(Base):
+    __tablename__ = 'book_comment'
+    
+    id = Column(Integer,primary_key=True,index=True)
+    user_id = Column(Integer,ForeignKey('user.id'))
+    book_id = Column(Integer,ForeignKey('book.id'))
+    comment = Column(String,nullable=False)
+    timestamp = Column(Date,nullable=False, default=datetime.now())
+    

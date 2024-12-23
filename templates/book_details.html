@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>{{ book.book_name }}</title>
+  <style>
+    /* General Styling */
+    body {
+      background-color: #ffffff;
+      color: #000000;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .slide-up {
+      animation: slideUp 1.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #000000;
+      border-radius: 4px;
+    }
+
+    .edit-comment, .delete-comment {
+      color: #1d4ed8; /* Change font color to blue */
+    }
+    .save-edit-comment {
+      margin-top: 8px; /* Add some space above the save button */
+      background-color: #10b981; /* Green background */
+      color: white; /* White text */
+      padding: 8px 16px; /* Padding */
+      border-radius: 8px; /* Rounded corners */
+      transition: background-color 0.3s ease; /* Smooth transition */
+    }
+    .save-edit-comment:hover {
+      background-color: #059669; /* Darker green on hover */
+    }
+    .comment-container {
+      border-bottom: 1px solid #e5e7eb; /* Light gray border */
+      padding-bottom: 8px; /* Padding below each comment */
+      margin-bottom: 8px; /* Margin below each comment */
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-white text-black">
+
+  <!-- Include Navbar -->
+  {% include 'navbar.html' %}
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-6 py-12 fade-in">
+    <!-- Header Section -->
+    <header class="mb-12 text-center">
+      <h1 class="text-6xl font-extrabold tracking-tight slide-up">{{ book.book_name }}</h1>
+      <p class="text-2xl font-medium text-gray-600 mt-4 slide-up">By {{ book.author }}</p>
+    </header>
+
+    <!-- Book Details Section -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 slide-up">
+      <!-- Book Cover -->
+      <div class="col-span-1 flex justify-center items-center">
+        <img src="/cover-image/{{book.id}}" alt="Book Cover of {{ book.book_name }}" class="rounded-lg shadow-lg max-w-full max-h-96">
+      </div>
+
+      <!-- Book Details -->
+      <div class="col-span-2 bg-gray-100 p-8 rounded-lg shadow-lg space-y-6">
+        <h2 class="text-3xl font-semibold">Book Details</h2>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-xl">Genre:</span>
+            <span class="text-gray-700 text-lg">{{ book.genre }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-xl">Language:</span>
+            <span class="text-gray-700 text-lg">{{ book.language }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-xl">Publisher:</span>
+            <span class="text-gray-700 text-lg">{{ book.publisher }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-xl">Publishing Year:</span>
+            <span class="text-gray-700 text-lg">{{ book.publishing_year }}</span>
+          </div>
+          <!-- Availability -->
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-xl">Availability:</span>
+            {% if book.available == True %}
+            <span class="text-green-600 text-lg font-bold">Available</span>
+            {% else %}
+            <span class="text-red-600 text-lg font-bold">Not Available</span>
+            <span class="text-gray-600 text-md mt-1 block">Return Date: {{ book.return_date }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Description Section -->
+    <section class="mt-12">
+      <h2 class="text-3xl font-semibold">Description</h2>
+      <p class="text-lg text-gray-700 mt-4">{{ book.description }}</p>
+    </section>
+
+    <!-- Comments Section -->
+    <section class="mt-12">
+      <h2 class="text-3xl font-semibold">Comments</h2>
+      <!-- Comment Form -->
+      <form action="/books/{{book.id}}" method="POST" class="mt-6 space-y-4">
+        <div>
+          <label for="comment" class="block text-lg font-medium text-gray-700">Comment</label>
+          <textarea id="comment" name="comment" required class="w-full h-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition">
+          Post Comment
+        </button>
+      </form>
+
+      <!-- Display Initial Comments -->
+      <div class="mt-12 space-y-6 bg-gray-100 p-8 rounded-lg shadow-lg">
+        <ul class="space-y-4">
+          {% if comments %}
+            {% for comment in comments %}
+              <li class="comment-container">
+                <div class="flex justify-between items-center">
+                  <p class="text-lg font-medium text-gray-700">{{ username_list[loop.index-1] }}</p>
+                  <div class="flex space-x-2">
+                    {% if user['role'] == 'admin' or comment.user_id == user['id'] %}<button class="edit-comment" data-id="{{ comment.id }}">Edit</button>{% endif %}
+                    {% if user['role'] == 'admin' or comment.user_id == user['id'] %}<button class="delete-comment" data-id="{{ comment.id }}">Delete</button>{% endif %}
+                  </div>
+                </div>
+                <p class="text-lg text-gray-800 mt-1 comment-text-{{ comment.id }}">{{ comment.comment }}</p>
+                <input type="text" id="edit-comment-{{ comment.id }}" class="hidden w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" value="{{ comment.comment }}">
+                <button type="button" data-id="{{ comment.id }}" class="hidden save-edit-comment">
+                  Save
+                </button>
+              </li>
+            {% endfor %}
+          {% else %}
+            <p class="italic text-gray-500 text-lg">No comments yet.</p>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- View More Comments -->
+      {% if book.comments|length > 5 %}
+      <div class="mt-4 text-center">
+        <a href="/book/{{ book.id }}/comments" class="text-lg text-black hover:underline">View More Comments</a>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-auto py-6 bg-black text-center text-white">
+    <p class="text-lg">© {{ current_year }} Book Details. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.edit-comment').forEach(button => {
+        button.addEventListener('click', function () {
+          const commentId = this.dataset.id;
+          document.querySelector(`#edit-comment-${commentId}`).classList.toggle('hidden');
+          document.querySelector(`.comment-text-${commentId}`).classList.toggle('hidden');
+          document.querySelector(`.save-edit-comment[data-id="${commentId}"]`).classList.toggle('hidden');
+        });
+      });
+
+      document.querySelectorAll('.save-edit-comment').forEach(button => {
+        button.addEventListener('click', function () {
+          const commentId = this.dataset.id;
+          const newComment = document.querySelector(`#edit-comment-${commentId}`).value;
+
+          const formData = new FormData();
+          formData.append('edited_comment', newComment);
+
+          fetch(`/books/{{ book.id }}/${commentId}/edit-comment`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token if needed
+            },
+            body: formData
+          })
+          .then(response => {
+            if (response.redirected) {
+              window.location.href = response.url;
+            } else {
+              return response.json();
+            }
+          })
+          .then(data => {
+            if (data && data.success) {
+              document.querySelector(`.comment-text-${commentId}`).textContent = newComment;
+              document.querySelector(`#edit-comment-${commentId}`).classList.add('hidden');
+              document.querySelector(`.comment-text-${commentId}`).classList.remove('hidden');
+              document.querySelector(`.save-edit-comment[data-id="${commentId}"]`).classList.add('hidden');
+              document.querySelector(`.edit-comment[data-id="${commentId}"]`).classList.remove('hidden');
+            } else if (data) {
+              alert('Failed to update comment.');
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+
+      document.querySelectorAll('.delete-comment').forEach(button => {
+        button.addEventListener('click', function () {
+          const commentId = this.dataset.id;
+
+          fetch(`/books/{{ book.id }}/${commentId}/delete-comment`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token if needed
+            },
+            body: JSON.stringify({ id: commentId })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              location.reload(); // Refresh the page
+            } else {
+              alert('Failed to delete comment.');
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+    });
+  </script>
+</body>
+</html>
