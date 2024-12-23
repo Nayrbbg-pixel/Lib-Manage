@@ -97,15 +97,8 @@ async def get_cover_image(book_id:int,db:db_conn):
     book = db.query(Book).filter(Book.id==book_id).first()
     
     headers={"Cache-Control":"no-store, no-cache, must-revalidate, max-age=0"}
-    val = None
-    # print(book.cover_image)
-    try:
-        book.cover_image[0]
-        val = True
-    except:
-        val = False
-
-    if val is False:
+        
+    if book.cover_image == b'':
         return FileResponse('images/book_cover.jpeg',media_type='image/jpeg', headers=headers)
     
     return Response(content=book.cover_image,headers=headers)

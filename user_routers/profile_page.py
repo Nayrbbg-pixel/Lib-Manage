@@ -23,18 +23,15 @@ async def profile_picture_upload(request:Request,db:db_conn,image:UploadFile=Fil
     profile_image_check = db.query(ProfileImage).filter(ProfileImage.user_id==user['id']).first() 
 
     if profile_image_check is None:
-        print('Image not found. Creating image data.')
         profile_image = ProfileImage(user_id=user['id'],
                                     image_data=image.file.read())
         db.add(profile_image)
         db.commit()
         db.refresh(profile_image)
     else:
-        print('Image found. Updating image data.')
         profile_image_check.image_data = image.file.read()
         db.commit()
         db.refresh(profile_image_check)
-        print('Image updated.')
     
     return RedirectResponse(url='/profile',status_code=302)
 
