@@ -36,6 +36,14 @@ async def add_book_database(request:Request,db:db_conn,
             cover_image = cover_image.file.read()
         else:
             cover_image = None
+            
+        if publishing_year is not None and publishing_year <= 0 :
+            return templates.TemplateResponse('add_book_page.html',
+                                              context={
+                                                  'request':request,
+                                                  'msg':'Publishing year cannot be negative or zero.',
+                                                  'user':user
+                                              })
         
         book = Book(
             book_name=book_name,

@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library System</title>
+    <title>Pacific- View your library</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-white text-black">
     <!-- Header -->
     <header class="flex items-center justify-between p-5 border-b border-gray-300">
         <div class="flex items-center space-x-4">
-            <h1 class="text-2xl font-bold"><a href='/home'>Library System</a></h1>
+            <h1 class="text-2xl font-bold"><a href='/home'>Pacific</a></h1>
             {% if user['role'] != 'user' %}<a href="/library/dashboard" class="text-lg font-medium hover:underline">Dashboard</a>{% endif %}
             {% if user['role'] == 'admin' %}<a href="/admin/admin-panel" class="text-lg font-medium hover:underline">Admin Panel</a>{% endif %}
-            <a href="/auth/logout">Logout</a>
+            <a href="/auth/logout" class="text-lg font-medium hover:underline">Logout</a>
         </div>
         <a href="/profile" class="flex items-center space-x-2 group">
             <img src="/users/{{ user['id'] }}/profile-image" 

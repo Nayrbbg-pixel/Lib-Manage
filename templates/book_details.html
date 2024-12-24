@@ -129,7 +129,7 @@
     <!-- Description Section -->
     <section class="mt-12">
       <h2 class="text-3xl font-semibold">Description</h2>
-      <p class="text-lg text-gray-700 mt-4">{{ book.description }}</p>
+      <p class="text-lg text-gray-700 mt-4">{% if book.description %}{{ book.description }}{% endif %}</p>
     </section>
 
     <!-- Comments Section -->

@@ -60,19 +60,20 @@ async def edit_comment(request: Request, book_id: int, comment_id: int, db: db_c
     print(edited_comment)
     book = db.query(Book).filter(Book.id == book_id).first()
     comment = db.query(BookComment).filter(BookComment.id == comment_id).first()
+    print(comment.comment)
+    if user['id'] == comment.user_id or user['role'] == 'admin':
+            comment.comment = edited_comment
+            db.commit()
+            db.refresh(comment)
 
-    if user['id'] != comment.user_id:
-        return JSONResponse(content={"success": False, "error": "Unauthorized"}, status_code=403)
+            return JSONResponse(content={"success": True})
 
     if book is None or comment is None:
         return JSONResponse(content={"success": False, "error": "Not found"}, status_code=404)
 
-    comment.comment = edited_comment
 
-    db.commit()
-    db.refresh(comment)
+    return JSONResponse(content={"success": False, "error": "Unauthorized"}, status_code=403)
 
-    return JSONResponse(content={"success": True})
 
 @router.post("/books/{book_id}/{comment_id}/delete-comment")
 async def delete_comment(request: Request, book_id: int, comment_id: int, db: db_conn):
@@ -80,16 +81,18 @@ async def delete_comment(request: Request, book_id: int, comment_id: int, db: db
     book = db.query(Book).filter(Book.id == book_id).first()
     comment = db.query(BookComment).filter(BookComment.id == comment_id).first()
 
-    if user['id'] != comment.user_id:
-        return JSONResponse(content={"success": False, "error": "Unauthorized"}, status_code=403)
+    if user['id'] == comment.user_id or user['role'] == 'admin':
+        db.delete(comment)
+        db.commit()
+
+        return JSONResponse(content={"success": True})
 
     if book is None or comment is None:
         return JSONResponse(content={"success": False, "error": "Not found"}, status_code=404)
 
-    db.delete(comment)
-    db.commit()
+    
+    return JSONResponse(content={"success": False, "error": "Unauthorized"}, status_code=403)
 
-    return JSONResponse(content={"success": True})
 
 @router.get('/cover-image/{book_id}')
 async def get_cover_image(book_id:int,db:db_conn):

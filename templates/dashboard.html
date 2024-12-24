@@ -205,7 +205,7 @@
         </thead>
         <tbody>
             {% for book in books %}
-            <tr onclick="location.href='/library/manage-book/{{ book.book_name }}/{{ book.id }}'">
+            <tr onclick="location.href='/library/manage-book/{{ book.id }}'">
                 <td>{{ book.book_name }}</td>
                 <td>{{ book.author }}</td>
                 <td>{{ book.genre }}</td>

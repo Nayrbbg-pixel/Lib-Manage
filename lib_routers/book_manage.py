@@ -1,12 +1,11 @@
 from datetime import datetime
 from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, Request, Form, Response
-from auth_routers.auth import decode_jwt
+from fastapi import APIRouter, Depends, Request, Form
 from fastapi.templating import Jinja2Templates
 from models import Book
 from sqlalchemy.orm import Session
 from lib_routers.utils import get_db
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import RedirectResponse
 from fastapi import UploadFile, File
 
 router = APIRouter(prefix='/library')
@@ -14,11 +13,11 @@ router = APIRouter(prefix='/library')
 db_conn = Annotated[Session,Depends(get_db)]
 templates = Jinja2Templates(directory='templates')
 
-@router.get('/manage-book/{title}/{book_id}')
-async def manage_book_page(title:str,book_id:int,
+@router.get('/manage-book/{book_id}')
+async def manage_book_page(book_id:int,
                            db:db_conn,request:Request):
     
-    book = db.query(Book).filter(Book.id==book_id,Book.book_name==title).\
+    book = db.query(Book).filter(Book.id==book_id).\
         first()
         
     if book is None:
@@ -28,11 +27,11 @@ async def manage_book_page(title:str,book_id:int,
         'request':request,'book':book,'user': getattr(request.state,'user')
     })
     
-@router.post('/manage-book/{title}/{book_id}')
-async def manage_book_post_api(request:Request,db:db_conn,title:str,book_id:int,
+@router.post('/manage-book/{book_id}')
+async def manage_book_post_api(request:Request,db:db_conn,book_id:int,
                                book_name:str=Form(...),author:str=Form(...),genre:str=Form(...),
                                availability:str=Form(...),return_date:Optional[str]=Form(None),
-                               language:str=Form(...),description:str=Form(...),publisher:Optional[str]=Form(None),
+                               language:str=Form(...),description:Optional[str]=Form(None),publisher:Optional[str]=Form(None),
                                publishing_year:Optional[int]=Form(None),
                                cover_image:Optional[UploadFile]=File(None)):
         

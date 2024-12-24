@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, Depends, File, Response, UploadFile
 from fastapi.responses import RedirectResponse, FileResponse
 from user_routers.utils import get_db, templates
-from typing import Annotated
+from typing import Annotated, Optional
 from sqlalchemy.orm import Session
 from models import User, ProfileImage
 
@@ -18,20 +18,22 @@ async def profile_page(request:Request, db:db_conn):
     })
     
 @router.post('/profile')
-async def profile_picture_upload(request:Request,db:db_conn,image:UploadFile=File(...)):
+async def profile_picture_upload(request:Request,db:db_conn,image:Optional[UploadFile]=File(None)):
     user = getattr(request.state,'user')
     profile_image_check = db.query(ProfileImage).filter(ProfileImage.user_id==user['id']).first() 
 
     if profile_image_check is None:
-        profile_image = ProfileImage(user_id=user['id'],
-                                    image_data=image.file.read())
-        db.add(profile_image)
-        db.commit()
-        db.refresh(profile_image)
+        if image.size != 0:
+            profile_image = ProfileImage(user_id=user['id'],
+                                        image_data=image.file.read())
+            db.add(profile_image)
+            db.commit()
+            db.refresh(profile_image)
     else:
-        profile_image_check.image_data = image.file.read()
-        db.commit()
-        db.refresh(profile_image_check)
+        if image.size != 0:
+            profile_image_check.image_data = image.file.read()
+            db.commit()
+            db.refresh(profile_image_check)
     
     return RedirectResponse(url='/profile',status_code=302)
 
