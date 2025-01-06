@@ -49,3 +49,21 @@ class BookComment(Base):
     comment = Column(String,nullable=False)
     timestamp = Column(Date,nullable=False, default=datetime.now())
     
+    
+class Query(Base):
+    __tablename__ = 'query'
+    
+    id = Column(Integer,primary_key=True,index=True)
+    user_id = Column(Integer,ForeignKey('user.id'))
+    username = Column(String,nullable=False)
+    # role = Column(Enum(Role),nullable=False)
+    query = Column(String,nullable=False)
+    timestamp = Column(Date,nullable=False, default=datetime.now())
+    
+class QueryResponse(Base):
+    __tablename__ = 'query_response'
+    
+    id = Column(Integer,primary_key=True,index=True)
+    query_id = Column(Integer,ForeignKey('query.id'))
+    response = Column(String,nullable=False)
+    timestamp = Column(Date,nullable=False, default=datetime.now())

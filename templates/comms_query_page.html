@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Query Room</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: white;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.6s ease-in-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .form-container {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            box-shadow: 0 -4px 6px rgba(191, 186, 186, 0.1);
+        }
+
+        .query-card {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .query-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .query-card {
+            background-color:rgb(181, 173, 173);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div class="container mx-auto p-6 flex-grow">
+        <h1 class="text-4xl font-semibold mb-6 text-center text-gray-800">Got a question?</h1>
+
+        <!-- Display Queries -->
+        <div class="space-y-6">
+            {% for query in queries %}
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md fade-in query-card">
+                    <div class="flex items-start space-x-4">
+                        <img src="/users/{{ query.user_id }}/profile-image" alt="{{ query.username }}" class="w-14 h-14 rounded-full border-2 border-gray-400">
+                        <div>
+                            <h3 class="text-xl font-bold text-black">{{ query.username }}</h3>
+                            <p class="text-black mt-2">{{ query.query }}</p>
+                            <p class="text-gray-500 text-sm mt-1">{{ query.timestamp }}</p>
+                            <div class="mt-4 flex space-x-6 text-black text-sm">
+                                <button class="hover:text-gray-800 transition duration-300 ease-in-out">Edit</button>
+                                <button class="hover:text-gray-800 transition duration-300 ease-in-out">Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Fixed Form at Bottom -->
+    <div class="form-container">
+        <form action="/comms-query-page" method="POST" class="flex space-x-4">
+            <input type="text" name="query" placeholder="Post a query..." class="flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
+            <button type="submit" class="bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
