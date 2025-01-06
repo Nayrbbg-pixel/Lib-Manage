@@ -2,7 +2,7 @@ from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Request, Form
 from auth_routers.auth import decode_jwt
 from fastapi.templating import Jinja2Templates
-from models import Book
+from models import Book, User
 from sqlalchemy.orm import Session
 from lib_routers.utils import get_db
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -16,8 +16,9 @@ router = APIRouter(prefix='/library',
 db_conn = Annotated[Session,Depends(get_db)]
 
 @router.get('/book_page',response_class=HTMLResponse)
-async def add_book_page(request:Request):
-    user = getattr(request.state,'user')
+async def add_book_page(request:Request, db:db_conn):
+    user_token = getattr(request.state, "user")
+    user = db.query(User).filter(User.id == user_token['id']).first()
     return templates.TemplateResponse('add_book_page.html',
                                       context={
                                           'request':request,'user':user

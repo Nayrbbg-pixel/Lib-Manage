@@ -9,7 +9,7 @@ from user_routers.utils import templates
 class TokenBucketRateLimiter(BaseHTTPMiddleware):
     def __init__(self,app):
         super().__init__(app=app)
-        self.tokenBucket = TokenBucket(10,2)
+        self.tokenBucket = TokenBucket(100,2)
         
     async def dispatch(self,request:Request,call_next):
         rate_limit_check = self.tokenBucket.allow_request()

@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Request, Depends, File, Response, UploadFile
+from fastapi import APIRouter, Form, Request, Depends, File, Response, UploadFile
 from fastapi.responses import RedirectResponse, FileResponse
 from user_routers.utils import get_db, templates
 from typing import Annotated, Optional
 from sqlalchemy.orm import Session
 from models import User, ProfileImage
+from auth_routers.auth import check_username_and_username
 
 router = APIRouter()
 
@@ -45,3 +46,20 @@ async def get_profile_image(user_id: int, db: Session = Depends(get_db)):
         return FileResponse('images/unknowuser.jpg', media_type="image/jpg", headers=headers)
     
     return Response(content=profile_image.image_data, headers=headers)
+
+
+@router.post('/edit-username')
+async def edit_username_page(request:Request,db:db_conn, 
+                             new_username:str=Form(...)):
+    user = getattr(request.state,'user')
+    
+    if check_username_and_username(username=new_username,db=db) is False:
+        return templates.TemplateResponse('profile-page.html',context={'request':request,
+                                                                       'user':user,
+                                                                       'msg':'Username is already taken!'})
+    
+    user_data = db.query(User).filter(User.id==user['id']).first()
+    user_data.username = new_username
+    db.commit()
+    db.refresh(user_data)
+    return templates.TemplateResponse('profile-page.html',context={'request':request,'user':user_data})

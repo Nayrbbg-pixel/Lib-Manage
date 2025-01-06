@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from user_routers.utils import templates, get_db
 from typing import Annotated, Optional
 from sqlalchemy.orm import Session
-from models import ProfileImage, Book
+from models import ProfileImage, Book, User
 
 db_conn = Annotated[Session, Depends(get_db)]
 
@@ -10,8 +10,10 @@ router = APIRouter()
 
 @router.get('/home')
 async def home_page(request:Request, db:db_conn, q:Optional[str]=None):
-    user = getattr(request.state,'user')
+    user_token = getattr(request.state,'user')
     user_lib_books = db.query(Book).all()
+    
+    user = db.query(User).filter(User.id==user_token['id']).first()
     
     if q is not None:
         books=db.query(Book).all()

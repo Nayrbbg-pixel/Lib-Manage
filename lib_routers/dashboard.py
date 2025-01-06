@@ -2,7 +2,7 @@ from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Request, Form
 from auth_routers.auth import decode_jwt
 from fastapi.templating import Jinja2Templates
-from models import Book
+from models import Book, User
 from sqlalchemy.orm import Session
 from lib_routers.utils import get_db
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -16,7 +16,8 @@ templates = Jinja2Templates(directory='templates')
 
 @router.get('/dashboard',response_class=HTMLResponse)
 async def dashboard_page(request:Request,db:db_conn,q:Optional[str]=None):
-    user = getattr(request.state,'user')
+    user_token = getattr(request.state, "user")
+    user = db.query(User).filter(User.id == user_token['id']).first()
     user_lib_books = db.query(Book).all()
     
     if q is not None:

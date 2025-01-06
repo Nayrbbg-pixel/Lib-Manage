@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.templating import Jinja2Templates
-from models import Book
+from models import Book, User
 from sqlalchemy.orm import Session
 from lib_routers.utils import get_db
 from fastapi.responses import RedirectResponse
@@ -16,7 +16,8 @@ templates = Jinja2Templates(directory='templates')
 @router.get('/manage-book/{book_id}')
 async def manage_book_page(book_id:int,
                            db:db_conn,request:Request):
-    
+    user_token = getattr(request.state, "user")
+    user = db.query(User).filter(User.id == user_token['id']).first()
     book = db.query(Book).filter(Book.id==book_id).\
         first()
         
@@ -24,7 +25,7 @@ async def manage_book_page(book_id:int,
         return RedirectResponse(url='/library/dashboard',status_code=302)
     
     return templates.TemplateResponse('manage-book.html',context={
-        'request':request,'book':book,'user': getattr(request.state,'user')
+        'request':request,'book':book,'user': user
     })
     
 @router.post('/manage-book/{book_id}')

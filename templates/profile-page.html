@@ -64,6 +64,15 @@
 {% include "navbar.html" %}
 
 <!-- Profile Section -->
+
+{% if msg %}
+<section class="container mx-auto mt-4 px-6">
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Error:</strong>
+        <span class="block sm:inline">{{ msg }}</span>
+    </div>
+</section>
+{% endif %}
 <section class="container mx-auto mt-8 px-6">
     <div class="bg-gray-100 p-8 shadow-lg rounded-lg">
         <div class="flex items-center space-x-6">
@@ -71,8 +80,16 @@
                  src="/users/{{user.id}}/profile-image" 
                  alt="{{ user.username }}'s Profile Picture"></a>
             <div>
-                <h2 class="text-3xl font-bold">{{ user.username }}</h2>
-                <p class="text-gray-600">{{ user.role.value.capitalize() if user.role != 'user' else 'Student' }}</p>
+                <div class="flex items-center">
+                    
+                    <h2 class="text-3xl font-bold">{{ user.username }}</h2>
+                    <button class="ml-4 bg-gray-200 text-black px-2 py-1 rounded-md cursor-pointer transition duration-300 hover:bg-gray-300" onclick="document.getElementById('edit-username-form').classList.toggle('hidden')">Edit</button>
+                </div>
+                <form id="edit-username-form" method="POST" action="/edit-username" class="mt-2 hidden">
+                    <input required type="text" name="new_username" value="{{ user.username }}" class="bg-gray-100 p-2 rounded-md">
+                    <button type="submit" class="bg-gray-200 text-black px-4 py-2 rounded-md cursor-pointer transition duration-300 hover:bg-gray-300">Save</button>
+                </form>
+                <p class="text-gray-600">{{ user.role.capitalize() if user.role != 'user' else 'Student' }}</p>
                 <form method="POST" action="/profile" enctype="multipart/form-data" class="mt-4">
                     <input type="file" name="image" class="hidden" id="profile-picture-input">
                     <label for="profile-picture-input" class="bg-gray-200 text-black px-4 py-2 rounded-md cursor-pointer transition duration-300 hover:bg-gray-300">Change Profile Picture</label>

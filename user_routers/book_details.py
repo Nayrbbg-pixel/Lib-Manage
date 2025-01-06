@@ -12,9 +12,10 @@ db_conn = Annotated[Session, Depends(get_db)]
 @router.get("/books/{book_id}")
 async def book_details(request:Request,book_id: int, 
                        db: db_conn):
-    user = getattr(request.state, "user")
+    user_token = getattr(request.state, "user")
+    user = db.query(User).filter(User.id == user_token['id']).first()
     book = db.query(Book).filter(Book.id == book_id).first()
-    comments = db.query(BookComment).filter(BookComment.book_id == book_id).all()[::-1]
+    comments = db.query(BookComment).filter(BookComment.book_id == book_id).order_by(BookComment.timestamp.desc()).all()
     username_list = []
     
     for comment in comments:
@@ -36,10 +37,14 @@ async def post_comments(request:Request,book_id:int,db:db_conn,
     book = db.query(Book).filter(Book.id==book_id).first()
     
     if book is None:
-        return RedirectResponse(url='/home',status_code=302)
+        return JSONResponse(content={"success": False,
+                                     "error": "Book not found"}, 
+                            status_code=404)
     
     if comment is None:
-        return RedirectResponse(url=f'/books/{book_id}',status_code=302)
+        return JSONResponse(content={"success": False,
+                                     "error": "Comment is required"},
+                            status_code=400)
     
     book_comment = BookComment(
         user_id = user['id'],
@@ -51,7 +56,9 @@ async def post_comments(request:Request,book_id:int,db:db_conn,
     db.commit()
     db.refresh(book_comment)
     
-    return RedirectResponse(url=f'/books/{book_id}',status_code=302)
+    username = db.query(User).filter(User.id==user['id']).first().username
+    
+    return JSONResponse(content={"success": True, "comment_id": book_comment.id, "comment": book_comment.comment, "username": username})
 
 @router.post("/books/{book_id}/{comment_id}/edit-comment")
 async def edit_comment(request: Request, book_id: int, comment_id: int, db: db_conn,

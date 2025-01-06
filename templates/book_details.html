@@ -136,7 +136,7 @@
     <section class="mt-12">
       <h2 class="text-3xl font-semibold">Comments</h2>
       <!-- Comment Form -->
-      <form action="/books/{{book.id}}" method="POST" class="mt-6 space-y-4">
+      <form id="comment-form" class="mt-6 space-y-4">
         <div>
           <label for="comment" class="block text-lg font-medium text-gray-700">Comment</label>
           <textarea id="comment" name="comment" required class="w-full h-24 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none"></textarea>
@@ -147,7 +147,7 @@
       </form>
 
       <!-- Display Initial Comments -->
-      <div class="mt-12 space-y-6 bg-gray-100 p-8 rounded-lg shadow-lg">
+      <div id="comments-container" class="mt-12 space-y-6 bg-gray-100 p-8 rounded-lg shadow-lg">
         <ul class="space-y-4">
           {% if comments %}
             {% for comment in comments %}
@@ -256,6 +256,47 @@
           })
           .catch(error => console.error('Error:', error));
         });
+      });
+
+      // Handle comment form submission
+      document.getElementById('comment-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(this);
+        fetch(`/books/{{ book.id }}`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token if needed
+          },
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Prepend the new comment to the comments container
+            const newComment = document.createElement('li');
+            newComment.classList.add('comment-container');
+            newComment.innerHTML = `
+              <div class="flex justify-between items-center">
+                <p class="text-lg font-medium text-gray-700">${data.username}</p>
+                <div class="flex space-x-2">
+                  <button class="edit-comment" data-id="${data.comment_id}">Edit</button>
+                  <button class="delete-comment" data-id="${data.comment_id}">Delete</button>
+                </div>
+              </div>
+              <p class="text-lg text-gray-800 mt-1 comment-text-${data.comment_id}">${data.comment}</p>
+              <input type="text" id="edit-comment-${data.comment_id}" class="hidden w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:outline-none" value="${data.comment}">
+              <button type="button" data-id="${data.comment_id}" class="hidden save-edit-comment">Save</button>
+            `;
+            document.getElementById('comments-container').prepend(newComment);
+
+            // Clear the comment form
+            document.getElementById('comment-form').reset();
+          } else {
+            alert('Failed to post comment.');
+          }
+        })
+        .catch(error => console.error('Error:', error));
       });
     });
   </script>
