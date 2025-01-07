@@ -52,14 +52,14 @@ async def get_profile_image(user_id: int, db: Session = Depends(get_db)):
 async def edit_username_page(request:Request,db:db_conn, 
                              new_username:str=Form(...)):
     user = getattr(request.state,'user')
+    user_data = db.query(User).filter(User.id==user['id']).first()
     
-    if check_username_and_username(username=new_username,db=db) is False:
+    if check_username_and_username(username=new_username,db=db) is False and new_username != user_data.username:
         return templates.TemplateResponse('profile-page.html',context={'request':request,
-                                                                       'user':user,
+                                                                       'user':user_data,
                                                                        'msg':'Username is already taken!'})
     
-    user_data = db.query(User).filter(User.id==user['id']).first()
     user_data.username = new_username
     db.commit()
     db.refresh(user_data)
-    return templates.TemplateResponse('profile-page.html',context={'request':request,'user':user_data})
+    return RedirectResponse(url='/profile', status_code=302)

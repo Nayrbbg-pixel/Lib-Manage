@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Form, Request, Response
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from comm_routers.utils import templates, get_db
 from typing import Annotated, Optional
 from sqlalchemy.orm import Session
@@ -41,3 +41,4 @@ async def post_query(request: Request, db: db_conn,
         db.refresh(query)
         
         return RedirectResponse(url='/comms-query-page',status_code=302)
+    

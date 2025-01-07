@@ -66,4 +66,5 @@ class QueryResponse(Base):
     id = Column(Integer,primary_key=True,index=True)
     query_id = Column(Integer,ForeignKey('query.id'))
     response = Column(String,nullable=False)
+    user_id = Column(Integer,ForeignKey('user.id'))
     timestamp = Column(Date,nullable=False, default=datetime.now())

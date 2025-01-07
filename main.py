@@ -10,6 +10,7 @@ from user_routers.profile_page import router as profile_router
 from user_routers.user_home_page import router as home_router
 from user_routers.book_details import router as book_details_router
 from comm_routers.comms_page import router as comms_router
+from comm_routers.query_reply_page import router as query_reply_router
 from fastapi.middleware.cors import CORSMiddleware
 from middlewares_fastapi.TokenBucketMiddleware import TokenBucketRateLimiter
 from middlewares_fastapi.JWTtokenExtraction import jwtTokenExtractor
@@ -38,6 +39,7 @@ app.include_router(profile_router)
 app.include_router(home_router)
 app.include_router(book_details_router)
 app.include_router(comms_router)
+app.include_router(query_reply_router)
 
 app.add_middleware(TokenBucketRateLimiter)
 app.add_middleware(jwtTokenExtractor)

@@ -38,11 +38,15 @@ async def manage_book_post_api(request:Request,db:db_conn,book_id:int,
         
     book=db.query(Book).filter(Book.id==book_id).first()
 
+    user_token = getattr(request.state,'user')
+    user = db.query(User).filter(User.id == user_token['id']).first()
+
     parsed_date = datetime.strptime(return_date, "%Y-%m-%d").date() if return_date else None
     
     if parsed_date and parsed_date < datetime.today().date():
         return templates.TemplateResponse('manage-book.html',context={
         'request':request,'book':book,'msg':'Return date cannot be in the past.'
+        ,'user':user
     })
     
     book.book_name = book_name
@@ -59,11 +63,12 @@ async def manage_book_post_api(request:Request,db:db_conn,book_id:int,
     if not availability:
         if parsed_date is None:
             return templates.TemplateResponse('manage-book.html',context={
-        'request':request,'book':book,'msg':'Return date is not given.'})
+        'request':request,'book':book,'msg':'Return date is not given.','user':user})
             
     if publishing_year is not None and publishing_year <= 0:
         return templates.TemplateResponse('manage-book.html',context={
-        'request':request,'book':book,'msg':'Invalid publishing year.'})
+        'request':request,'book':book,'msg':'Invalid publishing year.'
+        ,'user':user})
                 
     book.available = availability
     book.return_date = parsed_date

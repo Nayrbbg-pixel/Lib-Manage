@@ -84,8 +84,8 @@
                             <p class="text-black mt-2">{{ query.query }}</p>
                             <p class="text-gray-500 text-sm mt-1">{{ query.timestamp }}</p>
                             <div class="mt-4 flex space-x-6 text-black text-sm">
-                                <button class="hover:text-gray-800 transition duration-300 ease-in-out">Edit</button>
-                                <button class="hover:text-gray-800 transition duration-300 ease-in-out">Reply</button>
+                                {% if user.id == query.user_id %}<button class="hover:text-gray-800 transition duration-300 ease-in-out">Edit</button>{% endif %}
+                                <button onclick=window.location.replace('/comms-query-reply/{{query.id}}') class="hover:text-gray-800 transition duration-300 ease-in-out">Reply</button>
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
             {% endfor %}
         </div>
     </div>
-
+    <br><br><br><br>
     <!-- Fixed Form at Bottom -->
     <div class="form-container">
         <form action="/comms-query-page" method="POST" class="flex space-x-4">

@@ -1,67 +1,118 @@
-
 <style>
-/* Navbar */
-nav {
-    background-color: #ffffff;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
-}
+    /* Navbar */
+    nav {
+        background-color: #ffffff;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
 
-nav a {
-    text-decoration: none;
-    margin-right: 1rem;
-    color: #000000;
-    font-weight: bold;
-    transition: color 0.3s ease-in-out;
-}
+    /* Links */
+    nav a {
+        text-decoration: none;
+        margin-right: 1rem;
+        color: #000000;
+        font-weight: bold;
+        transition: color 0.3s ease-in-out;
+    }
 
-nav a:hover {
-    color: #444444;
-}
+    nav a:hover {
+        color: #444444;
+    }
 
-nav button {
-    padding: 0.5rem 1rem;
-    background-color: #000000;
-    color: #ffffff;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s;
-}
+    /* Button */
+    nav button {
+        padding: 0.5rem 1rem;
+        background-color: #000000;
+        color: #ffffff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s;
+    }
 
-nav button:hover {
-    background-color: #444444;
-    transform: scale(1.05);
-}
+    nav button:hover {
+        background-color: #444444;
+        transform: scale(1.05);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        nav {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 1rem;
+        }
+
+        nav .menu-toggle {
+            display: block;
+            background-color: transparent;
+            color: #000000;
+            padding: 0;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-top: -2rem;
+            margin-right: 1rem;
+        }
+
+        nav div {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        nav div.open {
+            display: flex;
+        }
+
+        nav a {
+            margin: 0.5rem 0;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .menu-toggle {
+            display: none;
+        }
+    }
 </style>
 </head>
 <body class="bg-white text-black">
-
 <!-- Navigation Bar -->
 <nav>
-<a href="/profile" class="flex items-center space-x-2 group">
-<img src="/users/{{ user['id'] }}/profile-image" 
-        alt="User Profile" 
-        class="w-10 h-10 rounded-full border border-gray-300 group-hover:ring-2 group-hover:ring-gray-500 transition">
-<span class="text-lg font-medium group-hover:underline">{{ user.username }}</span>
-</a>
-<div>
-
-<a href="/home">Home</a>
-{% if user['role']!='user' %}
-<a href="/library/dashboard">Dashboard</a>
-<a href="/library/book_page">Add Books</a>
-{% endif %}
-<a href="/comms-query-page">Communicate</a>
-<a href="/auth/logout">Logout</a>
-{% if user['role']=='admin' %}<a href="/admin">Admin Panel</a>{% endif %}
-</div>
+    <a href="/profile" class="flex items-center space-x-2 group">
+        <img src="/users/{{ user.id }}/profile-image" 
+                alt="User Profile" 
+                class="w-10 h-10 rounded-full border border-gray-300 group-hover:ring-2 group-hover:ring-gray-500 transition">
+        <span class="text-lg font-medium group-hover:underline">{{ user.username }}</span>
+    </a>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div id="menu">
+        <a href="/home">Home</a>
+        {% if user.role!='user' %}
+        <a href="/library/dashboard">Dashboard</a>
+        <a href="/library/book_page">Add Books</a>
+        {% endif %}
+        <a href="/comms-query-page">Communicate</a>
+        <a href="/auth/logout">Logout</a>
+        {% if user.role=='admin' %}
+        <a href="/admin">Admin Panel</a>
+        {% endif %}
+    </div>
 </nav>
+
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('open');
+    }
+</script>
