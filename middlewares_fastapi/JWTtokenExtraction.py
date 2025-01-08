@@ -8,12 +8,14 @@ class jwtTokenExtractor(BaseHTTPMiddleware):
     
     async def dispatch(self, request, call_next):
         
+        print(request.url.path)
+        
         if request.url.path.startswith('/auth'):
             return await call_next(request)
         
         jwt_token = decode_jwt(request)
         
-        if not jwt_token:
+        if not jwt_token and request.url.path != '/':
             return RedirectResponse(url='/auth/login',status_code=302)
         
         request.state.user = jwt_token

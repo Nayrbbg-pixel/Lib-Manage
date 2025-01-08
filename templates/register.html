@@ -6,6 +6,7 @@
     <title>Lib Management</title>
 </head>
 <body>
+    <h1>Please Register</h1>
     {% if msg %}
         {{msg}}
     {% endif %}
@@ -18,5 +19,7 @@
         <input name="password2" type="password" required /><br><br>
         <button type="submit">Submit</button>
     </form>
+    <br><br>
+    Already a user?<a href='/auth/login'> Login here</a>
 </body>
 </html>

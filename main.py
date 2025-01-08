@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from database import engine
 from models import Base
+from comm_routers.utils import templates
 from fastapi.responses import RedirectResponse
 from auth_routers.auth import router as auth
 from lib_routers.book_add import router as add_book_router
@@ -20,8 +21,10 @@ app = FastAPI()
 Base.metadata.create_all(engine)
 
 @app.get("/")
-async def root():
-    return RedirectResponse(url='/home',status_code=302)
+async def root(request:Request):
+    return templates.TemplateResponse('dev_temp.html',
+                                      context={'request':request})
+    # return RedirectResponse(url='/home',status_code=302)
 
 app.add_middleware(
 	CORSMiddleware,

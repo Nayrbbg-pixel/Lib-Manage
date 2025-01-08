@@ -59,9 +59,7 @@ async def register_user_endpoint(request:Request,db:db_conn,username:str = Form(
             db.commit()
             db.refresh(user)
             
-            return templates.TemplateResponse('register.html',context={
-                'request':request,'msg':'Successful Login!'
-            })
+            return RedirectResponse(url='/auth/login',status_code=302)
         return templates.TemplateResponse('register.html',context={
                 'request':request,'msg':'Passwords did not match!'
             })
