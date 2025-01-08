@@ -7,7 +7,7 @@ from enum import Enum as pyEnum
 
 class Role(str,pyEnum):
     ADMIN = 'admin'
-    INSPECTOR = 'inspector'
+    INSPECTOR = 'inspector' # the librarian
     USER = 'user'
 
 class User(Base):
