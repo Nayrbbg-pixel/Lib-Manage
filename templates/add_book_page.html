@@ -8,20 +8,7 @@
 </head>
 <body class="min-h-screen bg-white text-black">
     <!-- Header -->
-    <header class="flex items-center justify-between p-5 border-b border-gray-300">
-        <div class="flex items-center space-x-4">
-
-            {% if user['role'] != 'user' %}<a href="/library/dashboard" class="text-lg font-medium hover:underline">Dashboard</a>{% endif %}
-            {% if user['role'] == 'admin' %}<a href="/admin/admin-panel" class="text-lg font-medium hover:underline">Admin Panel</a>{% endif %}
-            <a href="/auth/logout">Logout</a>
-        </div>
-        <a href="/profile" class="flex items-center space-x-2 group">
-            <img src="/users/{{ user['id'] }}/profile-image" 
-                    alt="User Profile" 
-                    class="w-10 h-10 rounded-full border border-gray-300 group-hover:ring-2 group-hover:ring-gray-500 transition">
-            <span class="text-lg font-medium group-hover:underline">{{ user.username }}</span>
-        </a>
-    </header>
+    {% include "navbar.html" %}
 
     <!-- Main Content -->
     {% if msg %}
