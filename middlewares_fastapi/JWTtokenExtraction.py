@@ -15,6 +15,9 @@ class jwtTokenExtractor(BaseHTTPMiddleware):
         
         jwt_token = decode_jwt(request)
         
+        if request.url.path.startswith('/admin') and jwt_token['role']!='admin':
+            return RedirectResponse(url='/home',status_code=302)
+        
         if not jwt_token and request.url.path != '/':
             return RedirectResponse(url='/auth/login',status_code=302)
         

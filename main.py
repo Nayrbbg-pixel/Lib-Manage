@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from database import engine
 from models import Base
+from dev_role_manage import router as dev_role_router
 from comm_routers.utils import templates
 from fastapi.responses import RedirectResponse
 from auth_routers.auth import router as auth
@@ -43,6 +44,7 @@ app.include_router(home_router)
 app.include_router(book_details_router)
 app.include_router(comms_router)
 app.include_router(query_reply_router)
+app.include_router(dev_role_router)
 
 app.add_middleware(TokenBucketRateLimiter)
 app.add_middleware(jwtTokenExtractor)
