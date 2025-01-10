@@ -16,19 +16,12 @@ from comm_routers.query_reply_page import router as query_reply_router
 from fastapi.middleware.cors import CORSMiddleware
 from middlewares_fastapi.TokenBucketMiddleware import TokenBucketRateLimiter
 from middlewares_fastapi.JWTtokenExtraction import jwtTokenExtractor
-from middlewares_fastapi.ActionsRecorder import ActionRecorderMiddleware
 from admin_routers.admin_page import router as admin_home_page_router
 from admin_routers.admin_control_page import router as admin_control_router
 
 app = FastAPI()
 
 Base.metadata.create_all(engine)
-
-@app.get("/")
-async def root(request:Request):
-    return templates.TemplateResponse('dev_temp.html',
-                                      context={'request':request})
-    # return RedirectResponse(url='/home',status_code=302)
 
 app.add_middleware(
 	CORSMiddleware,
@@ -37,6 +30,16 @@ app.add_middleware(
 	allow_methods=["*"],
 	allow_headers=["*"],
 )
+
+app.add_middleware(TokenBucketRateLimiter)
+app.add_middleware(jwtTokenExtractor)  # Ensure jwtTokenExtractor runs first
+
+
+@app.get("/")
+async def root(request:Request):
+    return templates.TemplateResponse('dev_temp.html',
+                                      context={'request':request})
+    # return RedirectResponse(url='/home',status_code=302)
 
 app.include_router(auth)
 app.include_router(add_book_router)
@@ -51,6 +54,3 @@ app.include_router(dev_role_router)
 app.include_router(admin_home_page_router)
 app.include_router(admin_control_router)
 
-app.add_middleware(jwtTokenExtractor)  # Ensure jwtTokenExtractor runs first
-app.add_middleware(TokenBucketRateLimiter)
-app.add_middleware(ActionRecorderMiddleware)  # Then ActionRecorderMiddleware

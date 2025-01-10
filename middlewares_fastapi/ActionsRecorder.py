@@ -1,18 +1,6 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 from database import SessionLocal
-from fastapi import Depends
-from sqlalchemy.orm import Session
-from typing import Annotated
 from models import User, UserRecordDetails
-
-def get_db():
-   db = SessionLocal()
-   try:
-       yield db
-   finally:
-       db.close()
-       
-db_conn = Annotated[Session, Depends(get_db)]
 
 class ActionRecorderMiddleware(BaseHTTPMiddleware):
     def __init__(self, app):
@@ -21,6 +9,10 @@ class ActionRecorderMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         
         print('AR')
+        
+        if request.url.path.startswith('/auth'):
+            return await call_next(request)
+        
         db = SessionLocal()
         user_token = getattr(request.state, 'user')
         user = db.query(User).filter(User.id==user_token['id']).first()
