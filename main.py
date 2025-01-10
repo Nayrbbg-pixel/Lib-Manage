@@ -51,6 +51,6 @@ app.include_router(dev_role_router)
 app.include_router(admin_home_page_router)
 app.include_router(admin_control_router)
 
-app.add_middleware(TokenBucketRateLimiter)
 app.add_middleware(jwtTokenExtractor)  # Ensure jwtTokenExtractor runs first
+app.add_middleware(TokenBucketRateLimiter)
 app.add_middleware(ActionRecorderMiddleware)  # Then ActionRecorderMiddleware
