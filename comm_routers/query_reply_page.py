@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from comm_routers.utils import templates, get_db
 from typing import Annotated
 from sqlalchemy.orm import Session
-from models import Query, QueryResponse, User
+from models import Query, QueryResponse, User, Role
 
 router = APIRouter()
 
@@ -21,8 +21,8 @@ async def reply_page(request:Request, db:db_conn, query_id:int):
     
     response_users = []
     for response in responses:
-        user= db.query(User).filter(User.id == response.user_id).first()
-        response_users.append(user)
+        res_user= db.query(User).filter(User.id == response.user_id).first()
+        response_users.append(res_user)
         
     return templates.TemplateResponse('query_responses-page.html',
                                       context={'request':request,
@@ -52,3 +52,24 @@ async def save_reply(request:Request, db:db_conn,query_id:int,
     db.refresh(query_response)
     
     return RedirectResponse(url=f'/comms-query-reply/{query_id}',status_code=302)
+
+@router.get('/comms-query-reply-delete/{response_id}')
+async def delete_query_response(request:Request, db:db_conn,
+                                response_id:int):
+    user_token = getattr(request.state,'user')
+    user = db.query(User).filter(User.id == user_token['id']).first()
+    response = db.query(QueryResponse).filter(QueryResponse.id==response_id).first()
+    
+    if response is None:
+        return RedirectResponse(url="/home",status_code=302)
+    
+    if user.id != response.user_id and user.role != Role.ADMIN:
+        return RedirectResponse(url=f"/comms-query-reply/{response.query_id}",
+                                status_code=302)
+    
+    db.delete(response)
+    db.commit()
+    
+    return RedirectResponse(url=f"/comms-query-reply/{response.query_id}",
+                                status_code=302)
+    
