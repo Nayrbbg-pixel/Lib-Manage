@@ -38,13 +38,13 @@ class jwtTokenExtractor(BaseHTTPMiddleware):
         if '/library/delete' in path:
             action = f'Path: {path}\nMethod: {method}\nObjective: Deleting a saved book.'
             
-        if '/home' in path:
+        if '/home' == path:
             action = f'Path: {path}\nMethod: {method}\nObjective: Viewing the library.'
             
         if '/books' in path:
             action = f'Path {path}\nMethod: {method}\nObjective: Viewing a book in the library details page.'
            
-        if 'profile' not in path:
+        if 'profile' not in path or 'cover-image' not in path:
             record = UserRecordDetails(
                 username = user.username,
                 role = user.role,
