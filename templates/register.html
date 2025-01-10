@@ -4,22 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lib Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Please Register</h1>
-    {% if msg %}
-        {{msg}}
-    {% endif %}
-    <form method="POST" action="/auth/register">
-        <label>Username:</label><br>
-        <input name="username" type="text" required /><br><br>
-        <label>Password:</label><br>
-        <input name="password1" type="password" required /><br><br>
-        <label>Confirm Password:</label><br>
-        <input name="password2" type="password" required /><br><br>
-        <button type="submit">Submit</button>
-    </form>
-    <br><br>
-    Already a user?<a href='/auth/login'> Login here</a>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg transition-all duration-500 ease-in-out transform hover:scale-105">
+        <h1 class="text-3xl font-bold text-gray-900 text-center mb-6 font-sans">Create an Account</h1>
+        <p class="text-center text-gray-500 mb-8 font-light">Please fill in the details below</p>
+        {% if msg %}
+            <div class="bg-red-100 text-red-600 text-sm font-medium text-center p-3 mb-4 rounded-md animate-pulse">
+                {{msg}}
+            </div>
+        {% endif %}
+        <form method="POST" action="/auth/register" class="space-y-6">
+            <div>
+                <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
+                <input id="username" name="username" type="text" required 
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out" 
+                    placeholder="Enter your username" />
+            </div>
+            <div>
+                <label for="password1" class="block text-gray-700 font-medium mb-2">Password</label>
+                <input id="password1" name="password1" type="password" required 
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out" 
+                    placeholder="Enter your password" />
+            </div>
+            <div>
+                <label for="password2" class="block text-gray-700 font-medium mb-2">Confirm Password</label>
+                <input id="password2" name="password2" type="password" required 
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out" 
+                    placeholder="Re-enter your password" />
+            </div>
+            <button type="submit" 
+                class="w-full bg-black text-white font-semibold py-3 rounded-lg shadow-md hover:bg-gray-800 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                Register
+            </button>
+        </form>
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">Already have an account? 
+                <a href="/auth/login" 
+                   class="text-blue-600 hover:text-blue-800 font-medium transition-all duration-300 ease-in-out">
+                   Login here
+                </a>
+            </p>
+        </div>
+    </div>
 </body>
 </html>
