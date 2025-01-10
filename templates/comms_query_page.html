@@ -84,6 +84,7 @@
                             <p class="text-black mt-2">{{ query.query }}</p>
                             <p class="text-gray-500 text-sm mt-1">{{ query.timestamp }}</p>
                             <div class="mt-4 flex space-x-6 text-black text-sm">
+                                {% if user.id == query.user_id %}<button onclick=window.location.replace('/comms-query-delete/{{query.id}}') class="hover:text-gray-800 transition duration-300 ease-in-out">Delete</button>{% endif %}
                                 <button onclick=window.location.replace('/comms-query-reply/{{query.id}}') class="hover:text-gray-800 transition duration-300 ease-in-out">Reply</button>
                             </div>
                         </div>

@@ -42,3 +42,20 @@ async def post_query(request: Request, db: db_conn,
         
         return RedirectResponse(url='/comms-query-page',status_code=302)
     
+
+@router.get('/comms-query-delete/{query_id}')
+async def delete_query(request:Request,db:db_conn, query_id:int):
+    user_token = getattr(request.state,'user')
+    user = db.query(User).filter(User.id==user_token['id']).first()
+    query = db.query(Query).filter(Query.id==query_id).first()
+    
+    if query is None or query.user_id != user.id or user.role.value!='admin':
+        return RedirectResponse(url='/home',
+                                status_code=302)
+        
+    db.delete(query)
+    db.commit()
+    
+    return RedirectResponse(url='/comms-query-page',
+                            status_code=302)
+    

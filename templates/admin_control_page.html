@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Styling for emphasis on method and path */
+        .highlight-box {
+            background-color: #f0f0f0;
+            border-left: 4px solid #4b5563;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group input,
+        .input-group select {
+            background-color: #fafafa;
+            border: 2px solid #ddd;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #4b5563;
+            box-shadow: 0 0 10px rgba(75, 85, 99, 0.2);
+        }
+
+        /* Hover effect for the buttons */
+        .btn {
+            background-color: #4b5563;
+            color: white;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2d3748;
+        }
+
+        /* Flexbox for button positioning */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        /* Error message styling */
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+{% include "navbar.html" %}
+
+<body class="bg-white text-black py-10 px-4">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+
+        <!-- Error Messages Section -->
+        {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+        <!-- User Details Section -->
+        <form action='/admin/user-details/{{target_user.id}}' method='POST'>
+            <div class="mb-12">
+                <h2 class="text-3xl font-semibold mb-4 text-gray-800">User Details</h2>
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" id="username" name="username" value="{{ target_user.username }}" class="focus:ring-gray-500 focus:border-gray-500">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                        <select id="role" name="role" class="focus:ring-gray-500 focus:border-gray-500">
+                            <option value="admin" {% if target_user.role == 'admin' %}selected{% endif %}>Admin</option>
+                            <option value="inspector" {% if target_user.role == 'inspector' %}selected{% endif %}>Inspector</option>
+                            <option value="user" {% if target_user.role == 'user' %}selected{% endif %}>User</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Button Group for Update and Delete -->
+            <div class="mt-10 text-center button-group">
+                <button type="submit" class="btn">Update User</button>
+                <!-- Hidden input to simulate DELETE request -->
+            </div>
+        </form>
+
+        <!-- Action History Section -->
+        <div class="mt-12">
+            <h2 class="text-3xl font-semibold mb-4 text-gray-800">User Actions</h2>
+            <div class="space-y-6">
+                {% for record in user_records %}
+                    <div class="flex flex-col gap-2 p-4 bg-gray-50 rounded-lg shadow-sm">
+                        <div class="text-lg font-semibold text-gray-800">Action: {{ record.action }}</div>
+                        <div class="text-sm text-gray-500">Timestamp: {{ record.timestamp }}</div>
+                        
+                        <div class="highlight-box mt-4">
+                            <p><strong>Method:</strong> {{ record.method }}</p>
+                            <p><strong>Path:</strong> {{ record.path }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="mt-10 text-center button-group">
+                <!-- Hidden input to simulate DELETE request -->
+                <button onclick=window.location.replace('/admin/delete-user/{{target_user.id}}') class="btn bg-red-600 hover:bg-red-700">Delete User</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

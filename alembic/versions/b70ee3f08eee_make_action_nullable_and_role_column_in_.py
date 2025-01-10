@@ -1,8 +1,8 @@
-"""Add user id
+"""Make action nullable and role column in action recorder
 
-Revision ID: 54584ee2a786
-Revises: e9176476cea9
-Create Date: 2024-12-13 12:56:23.446665
+Revision ID: b70ee3f08eee
+Revises: 
+Create Date: 2025-01-10 20:54:28.363607
 
 """
 from typing import Sequence, Union
@@ -12,14 +12,15 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '54584ee2a786'
+revision: str = 'b70ee3f08eee'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
+from models import Role
 
 def upgrade() -> None:
-    op.add_column('book',sa.Column('user_id',sa.Integer,sa.ForeignKey('user.id')))
+    op.add_column('user_record_details',sa.Column('method',sa.String,nullable=False))
 
 def downgrade() -> None:
     pass

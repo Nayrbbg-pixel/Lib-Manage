@@ -73,9 +73,10 @@ class UserRecordDetails(Base):
     __tablename__ = 'user_record_details'
     
     id = Column(Integer,primary_key=True,index=True)
-    username = Column(String, ForeignKey('user.username'), nullable=False)
-    role = Column(Enum, ForeignKey('user.role'), nullable=False)
+    username = Column(String, nullable=False)
+    role = Column(Enum(Role), nullable=False)
     path = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'),nullable=False)
     action = Column(String, nullable=False)
     timestamp = Column(Date, nullable=False, default= datetime.now())
+    method = Column(String,nullable=False)
