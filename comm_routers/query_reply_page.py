@@ -44,7 +44,8 @@ async def save_reply(request:Request, db:db_conn,query_id:int,
     query_response = QueryResponse(
         response=response,
         user_id = user.id,
-        query_id = query_id
+        query_id = query_id,
+        username=user.username
     )
     
     db.add(query_response)

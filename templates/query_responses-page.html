@@ -113,24 +113,20 @@
             {% for response in responses %}
                 <div class="response-card relative" id="response-card-{{ response.id }}">
                     <div class="flex items-start space-x-4">
-                        {% for response_user in response_users %}
-                            {% if response_user.id == response.user_id %}
-                                <!-- Display the profile image of the user who responded -->
-                                <img src="/users/{{ response.user_id }}/profile-image" alt="{{ response_user.username }}" class="w-10 h-10 rounded-full border border-gray-300">
-                                
-                                <!-- Display the username of the user who responded -->
-                                <div class="flex-1">
-                                    <h3 class="text-lg font-semibold">{{ response_user.username }}</h3>
-                                    <p id="response-text-{{ response.id }}" class="mt-2">{{ response.response }}</p>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
+                        <!-- Display the profile image of the user who responded -->
+                        <img src="/users/{{ response.user_id }}/profile-image" alt="{{ response.username }}" class="w-10 h-10 rounded-full border border-gray-300">
+                        
+                        <!-- Display the username of the user who responded -->
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold">{{ response.username }}</h3>
+                            <p id="response-text-{{ response.id }}" class="mt-2">{{ response.response }}</p>
+                        </div>
                         
                         <textarea id="edit-input-{{ response.id }}" class="edit-input w-full p-2 border rounded-md mt-2"></textarea>
                         <span class="text-gray-500 text-sm">{{ response.timestamp }}</span>
                     </div>
                     
-                    {% if response.user_id == user.id %}
+                    {% if response.user_id == user.id or user.role.value == 'admin' %}
                         <button class="delete-button delete-btn" onclick="window.location.replace('/comms-query-reply-delete/{{response.id}}')">Delete</button>
                     {% endif %}
                 </div>
