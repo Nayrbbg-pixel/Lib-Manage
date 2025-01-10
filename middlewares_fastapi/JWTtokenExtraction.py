@@ -16,6 +16,10 @@ class jwtTokenExtractor(BaseHTTPMiddleware):
             return await call_next(request)
         
         jwt_token = decode_jwt(request)
+        
+        if jwt_token is False:
+            return RedirectResponse(url='/auth/login',status_code=302)
+        
         request.state.user = jwt_token
         
         db = SessionLocal()
