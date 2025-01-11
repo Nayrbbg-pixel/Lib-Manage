@@ -61,7 +61,6 @@ class jwtTokenExtractor(BaseHTTPMiddleware):
             db.add(record)
             db.commit()
             db.refresh(record)
-            db.close()
         
         if request.url.path.startswith('/admin') and user.role.value!='admin':
             return RedirectResponse(url='/home',status_code=302)
@@ -70,7 +69,7 @@ class jwtTokenExtractor(BaseHTTPMiddleware):
             return RedirectResponse(url='/auth/login',status_code=302)
         
 
-        if request.url.path.startswith('/library') and jwt_token['role'] =='user' :
+        if request.url.path.startswith('/library') and user.role.value =='user' :
             return RedirectResponse(url='/home',status_code=302)
         
         
