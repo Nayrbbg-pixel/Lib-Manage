@@ -16,6 +16,7 @@ from comm_routers.query_reply_page import router as query_reply_router
 from fastapi.middleware.cors import CORSMiddleware
 from middlewares_fastapi.TokenBucketMiddleware import TokenBucketRateLimiter
 from middlewares_fastapi.JWTtokenExtraction import jwtTokenExtractor
+from middlewares_fastapi.SecurityHeaders import SecurityHeadersMiddleware
 from admin_routers.admin_page import router as admin_home_page_router
 from admin_routers.admin_control_page import router as admin_control_router
 
@@ -33,7 +34,7 @@ app.add_middleware(
 
 app.add_middleware(TokenBucketRateLimiter)
 app.add_middleware(jwtTokenExtractor)  # Ensure jwtTokenExtractor runs first
-
+app.add_middleware(SecurityHeadersMiddleware)
 
 @app.get("/")
 async def root(request:Request):

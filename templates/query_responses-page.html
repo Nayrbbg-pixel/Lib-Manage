@@ -119,11 +119,11 @@
                         <!-- Display the username of the user who responded -->
                         <div class="flex-1">
                             <h3 class="text-lg font-semibold">{{ response.username }}</h3>
+                            <span class="text-gray-500 text-sm">{{ response.timestamp }}</span>
                             <p id="response-text-{{ response.id }}" class="mt-2">{{ response.response }}</p>
                         </div>
                         
                         <textarea id="edit-input-{{ response.id }}" class="edit-input w-full p-2 border rounded-md mt-2"></textarea>
-                        <span class="text-gray-500 text-sm">{{ response.timestamp }}</span>
                     </div>
                     
                     {% if response.user_id == user.id or user.role.value == 'admin' %}

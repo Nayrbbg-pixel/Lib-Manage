@@ -71,6 +71,10 @@
             border-radius: 0.5rem;
             margin-bottom: 1rem;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 {% include "navbar.html" %}
@@ -109,7 +113,6 @@
             <!-- Button Group for Update and Delete -->
             <div class="mt-10 text-center button-group">
                 <button type="submit" class="btn">Update User</button>
-                <!-- Hidden input to simulate DELETE request -->
             </div>
         </form>
 
@@ -117,7 +120,7 @@
         <div class="mt-12">
             <h2 class="text-3xl font-semibold mb-4 text-gray-800">User Actions</h2>
             <div class="space-y-6">
-                {% for record in user_records %}
+                {% for record in user_records[:5] %} <!-- Only show the first 5 actions initially -->
                     <div class="flex flex-col gap-2 p-4 bg-gray-50 rounded-lg shadow-sm">
                         <div class="text-lg font-semibold text-gray-800">Action: {{ record.action }}</div>
                         <div class="text-sm text-gray-500">Timestamp: {{ record.timestamp }}</div>
@@ -128,12 +131,51 @@
                         </div>
                     </div>
                 {% endfor %}
+
+                <!-- Hidden actions, initially hidden -->
+                <div id="more-actions" class="space-y-6 hidden">
+                    {% for record in user_records[5:] %} <!-- Display the remaining actions when requested -->
+                        <div class="flex flex-col gap-2 p-4 bg-gray-50 rounded-lg shadow-sm">
+                            <div class="text-lg font-semibold text-gray-800">Action: {{ record.action }}</div>
+                            <div class="text-sm text-gray-500">Timestamp: {{ record.timestamp }}</div>
+
+                            <div class="highlight-box mt-4">
+                                <p><strong>Method:</strong> {{ record.method }}</p>
+                                <p><strong>Path:</strong> {{ record.path }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
+
+            <!-- Show More Button -->
             <div class="mt-10 text-center button-group">
                 <!-- Hidden input to simulate DELETE request -->
+            </div>
+            <div id="show-more-container" class="mt-10 text-center button-group">
                 <button onclick=window.location.replace('/admin/delete-user/{{target_user.id}}') class="btn bg-red-600 hover:bg-red-700">Delete User</button>
+                <button id='show-less-button' class='btn hidden' onclick='showLessActions()'>Show Less</button>
+                <button id="show-more-button" onclick="showMoreActions()" class="btn">Show More</button>
             </div>
         </div>
     </div>
+
+    <script>
+        // JavaScript to show more actions when clicked
+        function showMoreActions() {
+            // Show the remaining actions
+            document.getElementById('more-actions').classList.remove('hidden');
+            
+            // Hide the Show More button
+            document.getElementById('show-less-button').classList.remove('hidden')
+            document.getElementById('show-more-button').classList.add('hidden');
+        }
+
+        function showLessActions() {
+            document.getElementById('more-actions').classList.add('hidden');
+            document.getElementById('show-more-button').classList.remove('hidden')
+            document.getElementById('show-less-button').classList.add('hidden');
+        }
+    </script>
 </body>
 </html>

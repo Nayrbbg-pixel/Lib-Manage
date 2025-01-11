@@ -115,7 +115,7 @@ async def store_access_token(response:Response,
         token = create_jwt_token(role=user.role.value,id=user.id,username=user.username,
                                     expiry_delta=timedelta(minutes=500))
         response.set_cookie(key='access_token',value=token,httponly=True,secure=True,
-                            samesite='lax')
+                            samesite='strict')
         return True
     except Exception as e:
         return False

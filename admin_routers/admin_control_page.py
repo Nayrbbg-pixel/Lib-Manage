@@ -18,9 +18,9 @@ async def user_control_page(request:Request, db:db_conn,
     req_user = db.query(User).filter(User.id == user_id).first()
     user_records = db.query(UserRecordDetails).filter(UserRecordDetails.user_id==req_user.id).all()[::-1]
     
-    # if req_user.role.value == 'admin':
-    #     return RedirectResponse(url='/admin/home',
-    #                             status_code=302)
+    if req_user.role.value == 'admin':
+        return RedirectResponse(url='/admin/home',
+                                status_code=302)
     
     if req_user is None:
         return RedirectResponse(url='/admin/home',
@@ -43,9 +43,9 @@ async def user_control_page(request:Request, db:db_conn,
     req_user = db.query(User).filter(User.id == user_id).first()
     user_records = db.query(UserRecordDetails).filter(UserRecordDetails.user_id==req_user.id).all()[::-1]    
     
-    # if req_user.role.value == 'admin':
-    #     return RedirectResponse(url='/admin/home',
-    #                             status_code=302)
+    if req_user.role.value == 'admin':
+        return RedirectResponse(url='/admin/home',
+                                status_code=302)
     
     if req_user is None:
         return RedirectResponse(url='/admin/home',
@@ -83,15 +83,19 @@ async def user_delete(request:Request, db:db_conn,
     user = db.query(User).filter(User.id == user_token['id']).first()
     req_user = db.query(User).filter(User.id == user_id).first()
     
-    # if req_user.role.value == 'admin':
-    #     return RedirectResponse(url='/admin/home',
-    #                             status_code=302)
+    if req_user.role.value == 'admin':
+        return RedirectResponse(url='/admin/home',
+                                status_code=302)
     
     if req_user is None:
         return RedirectResponse(url='/admin/home',
                                 status_code=302)
     
-    print('DOne')    
+    user_records = db.query(UserRecordDetails).filter(UserRecordDetails.user_id == req_user.id).all()
+    
+    for user_record in user_records:
+        db.delete(user_record)
+        db.commit()    
     
     db.delete(req_user)
     db.commit()

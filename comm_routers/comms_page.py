@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from comm_routers.utils import templates, get_db
 from typing import Annotated, Optional
 from sqlalchemy.orm import Session
-from models import Query, User
+from models import Query, QueryResponse, User
 
 router = APIRouter()
 
@@ -52,7 +52,13 @@ async def delete_query(request:Request,db:db_conn, query_id:int):
     if query is None or query.user_id != user.id or user.role.value!='admin':
         return RedirectResponse(url='/home',
                                 status_code=302)
-        
+    
+    query_responses = db.query(QueryResponse).filter(QueryResponse.query_id == query.id).all()
+    
+    for query_response in query_responses:
+        db.delete(query_response)
+        db.commit()
+    
     db.delete(query)
     db.commit()
     
