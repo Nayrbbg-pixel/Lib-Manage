@@ -61,6 +61,7 @@ class jwtTokenExtractor(BaseHTTPMiddleware):
             db.add(record)
             db.commit()
             db.refresh(record)
+            db.close()
         
         if request.url.path.startswith('/admin') and user.role.value!='admin':
             return RedirectResponse(url='/home',status_code=302)
