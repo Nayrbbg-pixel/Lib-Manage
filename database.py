@@ -5,7 +5,7 @@ DATABASE_URL = "postgresql://pacific_library_user:Fw1u3sIagil9R1JbUNiG9txOc4xR7e
 
 DATABASE_URL2 = 'sqlite:///./betatesting.db'
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL2)
 
 SessionLocal = sessionmaker(bind=engine,
                             autoflush=False,
