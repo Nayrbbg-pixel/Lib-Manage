@@ -129,13 +129,14 @@
     <!-- Description Section -->
     <section class="mt-12">
       <h2 class="text-3xl font-semibold">Description</h2>
-      <div>
+      <div class="space-y-4">
   {% for paragraph in book.description.split('\n') %}
     {% if paragraph.strip() %}
-      <p class="mb-4">{{ paragraph }}</p>
+      <p>{{ paragraph }}</p>
     {% endif %}
   {% endfor %}
 </div>
+
 
     </section>
 
