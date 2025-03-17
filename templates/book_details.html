@@ -129,12 +129,9 @@
     <!-- Description Section -->
     <section class="mt-12">
       <h2 class="text-3xl font-semibold">Description</h2>
-      <div class="text-lg text-gray-700 mt-4 leading-relaxed">
-  {% for para in book.description.split('\n\n') %}
-    <p class="mb-4">{{ para.strip() }}</p>
-  {% endfor %}
-</div>
-
+      <p class="whitespace-pre-line">
+    {{ book.description }}
+</p>
     </section>
 
     <!-- Comments Section -->
