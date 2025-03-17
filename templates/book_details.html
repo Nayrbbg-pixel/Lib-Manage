@@ -129,8 +129,10 @@
     <!-- Description Section -->
     <section class="mt-12">
       <h2 class="text-3xl font-semibold">Description</h2>
-      <div class="whitespace-pre-wrap text-lg text-gray-700 mt-4 leading-relaxed">
-  {{ book.description }}
+      <div class="text-lg text-gray-700 mt-4 leading-relaxed">
+  {% for para in book.description.split('\n') %}
+    <p class="mb-4">{{ para }}</p>
+  {% endfor %}
 </div>
     </section>
 
