@@ -131,7 +131,9 @@
       <h2 class="text-3xl font-semibold">Description</h2>
       <div class="text-lg text-gray-700 mt-4 leading-relaxed">
   {% for para in book.description.split('\n') %}
-    <p class="mb-4">{{ para }}</p>
+    {% if para.strip() %}  {# Ignore empty lines #}
+      <p class="mb-4">{{ para }}</p>
+    {% endif %}
   {% endfor %}
 </div>
     </section>
