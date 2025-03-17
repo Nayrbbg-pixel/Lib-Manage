@@ -130,8 +130,10 @@
     <section class="mt-12">
       <h2 class="text-3xl font-semibold">Description</h2>
       <div class="space-y-4">
-  {% for paragraph in book.description.split('\n\n') %}
-    <p class="text-lg text-gray-700 whitespace-pre-line">{{ paragraph | safe }}</p>
+  {% for paragraph in book.description.split('\n') %}
+    {% if paragraph.strip() %}
+      <p class="text-lg text-gray-700 whitespace-pre-line">{{ paragraph | safe }}</p>
+    {% endif %}
   {% endfor %}
 </div>
 
