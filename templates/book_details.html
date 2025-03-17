@@ -129,8 +129,8 @@
     <!-- Description Section -->
     <section class="mt-12">
       <h2 class="text-3xl font-semibold">Description</h2>
-      <div class="text-lg text-gray-700 mt-4 whitespace-pre-line leading-relaxed space-y-4">
-  {% if book.description %}{{ book.description }}{% endif %}
+      <div class="whitespace-pre-wrap text-lg text-gray-700 mt-4 leading-relaxed">
+  {{ book.description }}
 </div>
     </section>
 
