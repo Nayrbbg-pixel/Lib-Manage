@@ -16,6 +16,7 @@ router = APIRouter(prefix='/library',
 
 db_conn = Annotated[Session, Depends(get_db)]
 
+# ✅ Route to Render Book Addition Page
 @router.get('/book_page', response_class=HTMLResponse)
 async def add_book_page(request: Request, db: db_conn):
     user_token = getattr(request.state, "user")
@@ -23,6 +24,7 @@ async def add_book_page(request: Request, db: db_conn):
     return templates.TemplateResponse('add_book_page.html',
                                       context={'request': request, 'user': user})
 
+# ✅ Route to Add a Single Book
 @router.post('/book_page')
 async def add_book_database(request: Request, db: db_conn,
                             book_name=Form(...), author=Form(...),
@@ -63,9 +65,9 @@ async def add_book_database(request: Request, db: db_conn,
     except Exception as e:
         print(e)
         return templates.TemplateResponse('add_book_page.html',
-                                          context={'request': request, 'msg': e, 'user': user})
+                                          context={'request': request, 'msg': str(e), 'user': user})
 
-# ✅ NEW BULK UPLOAD FEATURE
+# ✅ NEW: Bulk Upload Books from CSV
 @router.post('/upload-books/')
 async def upload_books(request: Request, file: UploadFile = File(...), db: db_conn):
     user = getattr(request.state, "user")
